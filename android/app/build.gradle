@@ -79,8 +79,8 @@ android {
         applicationId 'com.JustCode.RefectioApp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName '9.0'
+        versionCode 11
+        versionName '11.0'
     }
     signingConfigs {
         release {
@@ -107,7 +107,6 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation('com.facebook.react:react-android')
-
     implementation project(':react-native-fast-image') //add this line
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
