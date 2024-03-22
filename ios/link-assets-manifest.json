@@ -1,0 +1,53 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/Fonts/Montserrat-Regular.ttf",
+      "sha1": "bb895d19b8a1fbe1c57fc89cac5da82fdc8fdef4"
+    },
+    {
+      "path": "assets/Fonts/Poppins-Bold.ttf",
+      "sha1": "875cf0cecd647bcf22e79d633d868c1b1ec98dfa"
+    },
+    {
+      "path": "assets/Fonts/Poppins-ExtraLight.ttf",
+      "sha1": "85af6582a7e6155917c605f9d3fed68c02b23b06"
+    },
+    {
+      "path": "assets/Fonts/Poppins-Light.ttf",
+      "sha1": "e247a92158e112f8bf7b638c8d95381d66b00dbb"
+    },
+    {
+      "path": "assets/Fonts/Poppins-Medium.ttf",
+      "sha1": "283f21b44efbdbf276ba802be2d949a36bbc4233"
+    },
+    {
+      "path": "assets/Fonts/Poppins-Regular.ttf",
+      "sha1": "fdd3002e7d814ee47c1c1b8487c72c6bbb3a2d00"
+    },
+    {
+      "path": "assets/Fonts/Poppins-SemiBold.ttf",
+      "sha1": "8a4ace9392d06bcb7f8ea2f5169b07e4c383a90d"
+    },
+    {
+      "path": "assets/Fonts/Raleway-Bold.ttf",
+      "sha1": "df52b051d8cbe8f238a4192d1b81e6dca2a08f72"
+    },
+    {
+      "path": "assets/Fonts/Raleway-ExtraBold.ttf",
+      "sha1": "507ed8ef6f99e561f51f3cde5cc16e09270308d6"
+    },
+    {
+      "path": "assets/Fonts/Raleway-Light.ttf",
+      "sha1": "8d2b201f053f6011b2f02111fb44b76a8146824a"
+    },
+    {
+      "path": "assets/Fonts/Raleway-Medium.ttf",
+      "sha1": "18128ef6b5306a11f256a4f16c2fa63ab8b608d9"
+    },
+    {
+      "path": "assets/Fonts/Raleway-SemiBold.ttf",
+      "sha1": "a98dee96e1e93fbf4ff1c50f6e8834e49f17f72f"
+    }
+  ]
+}
