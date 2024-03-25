@@ -420,7 +420,7 @@ export default function App() {
   const [urlLinking, setUrlLinking] = useState('');
   const [urlMy, setUrlMy] = useState('');
   useEffect(() => {
-      const handleDeepLink = async ({url}) => {
+    const handleDeepLink = async ({url}) => {
       setIsLoading(true);
       setUrlLinking(url);
       if (url) {
@@ -670,14 +670,14 @@ export default function App() {
               loginState.userRole == '2' &&
               loginState.userToken !== null ? (
                 <>
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{path: 'DesignerPageTwo'}}
                     options={{
                       gestureEnabled: false,
                     }}
-                  />
+                  /> */}
                   <Stack.Screen name="DesignerPage">
                     {props => (
                       <DesignerPageComponent {...props} setId={setId} />
@@ -686,14 +686,14 @@ export default function App() {
                 </>
               ) : (
                 <>
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{path: 'DesignerPageTwo'}}
                     options={{
                       gestureEnabled: false,
                     }}
-                  />
+                  /> */}
                   <Stack.Screen
                     name="DesignerPageTwo"
                     options={{headerShown: false}}>
@@ -830,7 +830,7 @@ export default function App() {
                       />
                     )}
                   </Stack.Screen>
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{
@@ -839,7 +839,7 @@ export default function App() {
                     options={{
                       gestureEnabled: false,
                     }}
-                  />
+                  /> */}
                 </>
               ) : (
                 <>
@@ -848,7 +848,7 @@ export default function App() {
                       <CustomerMainPageComponent {...props} setId={setId} />
                     )}
                   </Stack.Screen>
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{
@@ -857,7 +857,7 @@ export default function App() {
                     options={{
                       gestureEnabled: false,
                     }}
-                  />
+                  /> */}
                 </>
               )}
               {urlLinking?.length > 0 &&
@@ -1011,7 +1011,7 @@ export default function App() {
                       />
                     )}
                   </Stack.Screen>
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{
@@ -1020,14 +1020,14 @@ export default function App() {
                     options={{
                       gestureEnabled: false,
                     }}
-                  />
+                  /> */}
                 </>
               ) : (
                 <>
                   <Stack.Screen name="GhostPage">
                     {props => <GhostPageComponent {...props} setId={setId} />}
                   </Stack.Screen>
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{
@@ -1036,7 +1036,7 @@ export default function App() {
                     options={{
                       gestureEnabled: false,
                     }}
-                  />
+                  /> */}
                 </>
               )}
 
