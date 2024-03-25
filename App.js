@@ -419,6 +419,7 @@ export default function App() {
   const [id, setId] = useState('');
   const [urlLinking, setUrlLinking] = useState('');
   const [urlMy, setUrlMy] = useState('');
+
   useEffect(() => {
       const handleDeepLink = async ({url}) => {
       setIsLoading(true);
@@ -447,6 +448,7 @@ export default function App() {
         console.error('Error getting initial URL:', error);
       }
     };
+
     Linking.addEventListener('url', handleDeepLink);
     handleInitialUrl();
 
@@ -669,21 +671,7 @@ export default function App() {
               {urlLinking?.length > 0 &&
               loginState.userRole == '2' &&
               loginState.userToken !== null ? (
-                <>
-                  <Stack.Screen
-                    name="AppUpdateAvailable"
-                    component={AppUpdateAvailableScreen}
-                    initialParams={{path: 'DesignerPageTwo'}}
-                    options={{
-                      gestureEnabled: false,
-                    }}
-                  />
-                  <Stack.Screen name="DesignerPage">
-                    {props => (
-                      <DesignerPageComponent {...props} setId={setId} />
-                    )}
-                  </Stack.Screen>
-                </>
+
               ) : (
                 <>
                   <Stack.Screen
