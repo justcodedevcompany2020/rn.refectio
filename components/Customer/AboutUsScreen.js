@@ -61,9 +61,9 @@ export default function AboutUsScreen({navigation, value, hideText}) {
         <View
           style={{
             flex: 1,
-            paddingHorizontal: 15,
+            // paddingHorizontal: 15,
           }}>
-          <View>
+          <View style={{marginLeft: 15}}>
             <BackBtn onPressBack={() => navigation.goBack()} />
             <Text
               style={{
@@ -74,7 +74,7 @@ export default function AboutUsScreen({navigation, value, hideText}) {
               Дополнительная информация
             </Text>
           </View>
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View
               style={{
                 flexDirection: 'row',
@@ -90,8 +90,10 @@ export default function AboutUsScreen({navigation, value, hideText}) {
                 }}>
                 <WebView
                   ref={webViewRef}
+                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
                   style={{
-                    width: screenWidth,
+                    width: '100%',
                     zIndex: 99999,
                     flex: 1,
                     overflow: 'hidden',
@@ -101,7 +103,7 @@ export default function AboutUsScreen({navigation, value, hideText}) {
                         : aboutUs.length + 100,
                   }}
                   source={{
-                    html: `<div style="font-size:50px; overflow: hidden; height:auto; width:1000">${newtx}</div>`,
+                    html: `<div style="font-size:45px; overflow: hidden; height:auto;">${newtx}</div>`,
                   }}
                 />
               </View>
