@@ -137,7 +137,7 @@ export default class LoginScreenComponent extends Component {
     })
       .then(response => response.json())
       .then(res => {
-        console.log(res);
+        console.log(res, 'result');
         let userToken = res.message.token;
 
         if (res.status == false) {

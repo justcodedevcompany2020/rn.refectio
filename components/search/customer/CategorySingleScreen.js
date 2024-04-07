@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
+  Dimensions,
   FlatList,
   Image,
   RefreshControl,
@@ -12,11 +13,14 @@ import {
 } from 'react-native';
 import {Path, Svg} from 'react-native-svg';
 import Loading from '../../Component/Loading';
-import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
+import GhostNavComponent from '../../Ghost/GhostNav';
 import Slider2 from '../../slider/Slider2';
 import shuffle from '../shuffle';
 
-export default function CategorySingleScreenCustomer({
+const {WIDTH} = Dimensions.get('screen');
+const widthScreen = Dimensions.get('window').width;
+
+export default function CategorySingleScreenGuest({
   category,
   mynextUrl,
   myproducts,
@@ -26,24 +30,39 @@ export default function CategorySingleScreenCustomer({
   startPrice,
   endPrice,
 }) {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(myproducts);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
   const [nextUrl, setNextUrl] = useState(mynextUrl);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [list, setList] = useState(false);
+  const [index, setindex] = useState(0);
+
   const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
-  const flatListRef = useRef(null);
+  const flatListRef = useRef();
   const navigation = useNavigation();
+  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  // useEffect(() => {
+  //   if (product !== undefined && flatListRef.current !== null) {
+  //     flatListRef.current.scrollToIndex({index: product, animated: true});
+  //   }
+  // }, [product]);
+
+  const layout = (data, index) => ({
+    length: widthScreen - 300,
+    offset: (widthScreen - 300) * index,
+    index,
+  });
 
   useEffect(() => {
     setProduct();
-  }, []);
+  }, [myproducts]);
 
   function setProduct() {
     setProducts(myproducts);
     setLoading(false);
   }
-
+  // console.log(products, 'lll');
   async function getProducts(refresh) {
     let formdata = new FormData();
     if (category.parent) {
@@ -100,18 +119,17 @@ export default function CategorySingleScreenCustomer({
     getProducts('refresh');
   };
 
-  const handleScrollToIndex = useCallback(
-    product => {
-      setProducts([
-        params.clickedItem,
-        ...myproducts.filter((_, i) => i !== product),
-      ]);
-    },
-    [product],
-  );
   useEffect(() => {
-    handleScrollToIndex(product);
-  }, [product]);
+    setTimeout(() => {
+      const indexes = products
+        .map((item, index) => (item.id === product ? index : -1))
+        .filter(index => index !== -1);
+      setindex(prevState => indexes[0]);
+      flatListRef.current.scrollToIndex({index: indexes[0], animated: true});
+
+      console.log(typeof indexes[0]);
+    }, 100);
+  }, [list]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
@@ -121,41 +139,56 @@ export default function CategorySingleScreenCustomer({
           paddingHorizontal: 15,
           position: 'relative',
         }}>
-        <BackBtn onPressBack={() => navigation.goBack()} />
+        <BackBtn
+          onPressBack={() => {
+            navigation.goBack();
+          }}
+        />
         {loading ? (
           <Loading />
         ) : (
           <FlatList
+            initialScrollIndex={index}
             ref={flatListRef}
-            onScrollToIndexFailed={info => {
-              handleScrollToIndex(info.index);
+            onScrollToIndexFailed={error => {
+              flatListRef.current.scrollToOffset({
+                offset: error.averageItemLength * error.index,
+                animated: false,
+              });
+
+              setTimeout(() => {
+                if (products.length !== 0 && flatListRef !== null) {
+                  flatListRef.current.scrollToIndex({
+                    index: error.index,
+                    animated: false,
+                  });
+                }
+              }, 100);
+              setLoading(false);
             }}
             showsVerticalScrollIndicator={false}
             keyExtractor={(_, index) => index}
             data={products}
-            renderItem={({item, _}) => {
+            renderItem={({item}) => {
               return (
-                <View
-                  style={{
-                    marginTop: 15,
-                  }}>
-                  <Slider2 slid={item.product_image} />
+                <View style={{marginTop: 15}}>
+                  <Slider2 slid={item?.product_image} searchMode />
                   <TouchableOpacity
                     style={{flexDirection: 'row', marginTop: 10}}
                     onPress={() => {
                       const routes = navigation.getState()?.routes;
-                      const prevRoute = routes[routes.length - 2];
-                      navigation.navigate('CustomerPageTwoDuble', {
+                      // const prevRoute = routes[routes.length - 2];
+                      navigation.navigate('GhostPageTwoComponentDuble', {
                         id: item.user_product.id,
                         fromSearch: true,
-                        prevRoute,
+                        prevRoute: 'CategorySingleScreen',
                       });
                     }}>
                     <Image
                       source={{
                         uri:
                           `https://admin.refectio.ru/storage/app/uploads/` +
-                          item.user_product.logo,
+                          item?.user_product.logo,
                       }}
                       style={{
                         width: 50,
@@ -164,10 +197,7 @@ export default function CategorySingleScreenCustomer({
                         borderRadius: 15,
                       }}
                     />
-                    <View
-                      style={{
-                        width: '90%',
-                      }}>
+                    <View style={{width: '90%'}}>
                       <View style={styles.itemNameBox}>
                         <Text style={styles.itemName}>
                           {item.name.length > 35
@@ -175,7 +205,7 @@ export default function CategorySingleScreenCustomer({
                             : item.name}
                         </Text>
                       </View>
-                      {item.facades && (
+                      {item?.facades && (
                         <Text style={{width: '92%'}}>
                           Фасады : {item.facades}
                         </Text>
@@ -257,13 +287,18 @@ export default function CategorySingleScreenCustomer({
                 onRefresh={handleRefresh}
               />
             }
+            onLayout={info => {
+              // console.log(info, 'onLayout');
+              // handleScrollToIndex();
+              setList(true);
+              setLoading(false);
+              // alert('layout');
+            }}
+            // getItemLayout={layout}
           />
         )}
       </View>
-      <CustomerMainPageNavComponent
-        active_page={'Поиск'}
-        navigation={navigation}
-      />
+      <GhostNavComponent active_page={'Поиск'} navigation={navigation} />
     </SafeAreaView>
   );
 }
@@ -313,7 +348,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#333333',
     fontWeight: '700',
-    // width:'86%'
   },
   itemType: {
     fontFamily: 'Raleway_600SemiBold',
@@ -322,3 +356,328 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+// import {useNavigation} from '@react-navigation/native';
+// import React, {useCallback, useEffect, useRef, useState} from 'react';
+// import {
+//   FlatList,
+//   Image,
+//   RefreshControl,
+//   SafeAreaView,
+//   StyleSheet,
+//   Text,
+//   TouchableOpacity,
+//   View,
+// } from 'react-native';
+// import {Path, Svg} from 'react-native-svg';
+// import Loading from '../../Component/Loading';
+// import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
+// import Slider2 from '../../slider/Slider2';
+// import shuffle from '../shuffle';
+
+// export default function CategorySingleScreenCustomer({
+//   category,
+//   mynextUrl,
+//   myproducts,
+//   product,
+//   cityId,
+//   params,
+//   startPrice,
+//   endPrice,
+// }) {
+//   const [products, setProducts] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [moreLoading, setMoreLoading] = useState();
+//   const [nextUrl, setNextUrl] = useState(mynextUrl);
+//   const [isRefreshing, setIsRefreshing] = useState(false);
+//   const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
+//   const flatListRef = useRef(null);
+//   const navigation = useNavigation();
+
+//   useEffect(() => {
+//     setProduct();
+//   }, []);
+
+//   function setProduct() {
+//     setProducts(myproducts);
+//     setLoading(false);
+//   }
+
+//   async function getProducts(refresh) {
+//     let formdata = new FormData();
+//     if (category.parent) {
+//       formdata.append('parent_category_id', category.parent_id);
+//       formdata.append('category_id', category.id);
+//     } else {
+//       formdata.append('parent_category_id', category.id);
+//     }
+
+//     cityId && formdata.append('city_id', cityId.id);
+//     startPrice &&
+//       formdata.append('start_price', startPrice.replaceAll('.', ''));
+//     endPrice && formdata.append('end_price', endPrice.replaceAll('.', ''));
+
+//     await fetch(refresh ? firstPageUrl : nextUrl, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//       body: formdata,
+//     })
+//       .then(response => response.json())
+//       .then(res => {
+//         let arr = shuffle(res.data.data);
+//         refresh ? setProducts(arr) : setProducts([...products, ...arr]);
+//         setNextUrl(res.data.next_page_url);
+//         setIsRefreshing(false);
+//         setLoading(false);
+//         setMoreLoading(false);
+//       });
+//   }
+
+//   const handleLoadMore = () => {
+//     if (nextUrl && !moreLoading) {
+//       setMoreLoading(true);
+//       getProducts();
+//     }
+//   };
+
+//   const renderFooter = () => {
+//     return (
+//       <View style={{marginVertical: 30}}>
+//         {moreLoading ? (
+//           <View style={{marginBottom: 30}}>
+//             <Loading />
+//           </View>
+//         ) : null}
+//       </View>
+//     );
+//   };
+
+//   const handleRefresh = () => {
+//     setIsRefreshing(true);
+//     getProducts('refresh');
+//   };
+
+//   const handleScrollToIndex = useCallback(
+//     product => {
+//       setProducts([
+//         params.clickedItem,
+//         ...myproducts.filter((_, i) => i !== product),
+//       ]);
+//     },
+//     [product],
+//   );
+//   useEffect(() => {
+//     handleScrollToIndex(product);
+//   }, [product]);
+
+//   return (
+//     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+//       <View
+//         style={{
+//           flex: 1,
+//           paddingHorizontal: 15,
+//           position: 'relative',
+//         }}>
+//         <BackBtn onPressBack={() => navigation.goBack()} />
+//         {loading ? (
+//           <Loading />
+//         ) : (
+//           <FlatList
+//             ref={flatListRef}
+//             onScrollToIndexFailed={info => {
+//               handleScrollToIndex(info.index);
+//             }}
+//             showsVerticalScrollIndicator={false}
+//             keyExtractor={(_, index) => index}
+//             data={products}
+//             renderItem={({item, _}) => {
+//               return (
+//                 <View
+//                   style={{
+//                     marginTop: 15,
+//                   }}>
+//                   <Slider2 slid={item.product_image} />
+//                   <TouchableOpacity
+//                     style={{flexDirection: 'row', marginTop: 10}}
+//                     onPress={() => {
+//                       const routes = navigation.getState()?.routes;
+//                       const prevRoute = routes[routes.length - 2];
+//                       navigation.navigate('CustomerPageTwoDuble', {
+//                         id: item.user_product.id,
+//                         fromSearch: true,
+//                         prevRoute,
+//                       });
+//                     }}>
+//                     <Image
+//                       source={{
+//                         uri:
+//                           `https://admin.refectio.ru/storage/app/uploads/` +
+//                           item.user_product.logo,
+//                       }}
+//                       style={{
+//                         width: 50,
+//                         height: 50,
+//                         marginRight: 12,
+//                         borderRadius: 15,
+//                       }}
+//                     />
+//                     <View
+//                       style={{
+//                         width: '90%',
+//                       }}>
+//                       <View style={styles.itemNameBox}>
+//                         <Text style={styles.itemName}>
+//                           {item.name.length > 35
+//                             ? item.name.substring(0, 35 - 3) + '...'
+//                             : item.name}
+//                         </Text>
+//                       </View>
+//                       {item.facades && (
+//                         <Text style={{width: '92%'}}>
+//                           Фасады : {item.facades}
+//                         </Text>
+//                       )}
+//                       {item.frame && (
+//                         <Text
+//                           style={{
+//                             width: '90%',
+//                           }}>
+//                           Корпус: {item.frame}
+//                         </Text>
+//                       )}
+//                       {item.profile && (
+//                         <Text
+//                           style={{
+//                             width: '90%',
+//                           }}>
+//                           Профиль: {item.profile}
+//                         </Text>
+//                       )}
+//                       {item.tabletop && (
+//                         <Text
+//                           style={{
+//                             width: '90%',
+//                           }}>
+//                           Столешница: {item.tabletop}
+//                         </Text>
+//                       )}
+//                       {item.length && (
+//                         <Text
+//                           style={{
+//                             width: '90%',
+//                           }}>
+//                           Длина: {item.length.replace('.', ',')} м.
+//                         </Text>
+//                       )}
+//                       {item.height && (
+//                         <Text
+//                           style={{
+//                             width: '90%',
+//                           }}>
+//                           Высота: {item.height.replace('.', ',')} м.
+//                         </Text>
+//                       )}
+//                       {item.material && (
+//                         <Text
+//                           style={{
+//                             width: '90%',
+//                           }}>
+//                           Материал: {item.material}
+//                         </Text>
+//                       )}
+//                       {item.price && (
+//                         <Text>
+//                           Цена:{' '}
+//                           {item.price
+//                             .toString()
+//                             .split('.')
+//                             .join('')
+//                             .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '}
+//                           руб.
+//                         </Text>
+//                       )}
+//                     </View>
+//                   </TouchableOpacity>
+//                 </View>
+//               );
+//             }}
+//             ListHeaderComponent={() => (
+//               <Text style={{marginTop: 20, fontSize: 20}}>{category.name}</Text>
+//             )}
+//             onEndReached={handleLoadMore}
+//             onEndReachedThreshold={0.1}
+//             ListFooterComponent={renderFooter}
+//             refreshControl={
+//               <RefreshControl
+//                 refreshing={isRefreshing}
+//                 colors={['#94D8F4']}
+//                 onRefresh={handleRefresh}
+//               />
+//             }
+//           />
+//         )}
+//       </View>
+//       <CustomerMainPageNavComponent
+//         active_page={'Поиск'}
+//         navigation={navigation}
+//       />
+//     </SafeAreaView>
+//   );
+// }
+
+// export function BackBtn({onPressBack}) {
+//   return (
+//     <TouchableOpacity
+//       style={{
+//         flexDirection: 'row',
+//         alignItems: 'center',
+//         marginTop: 15,
+//         marginLeft: -10,
+//       }}
+//       onPress={onPressBack}>
+//       <Svg
+//         width={25}
+//         height={30}
+//         viewBox="0 0 30 30"
+//         fill="none"
+//         xmlns="http://www.w3.org/2000/svg">
+//         <Path
+//           d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
+//           fill="#94D8F4"
+//         />
+//       </Svg>
+//       <Text style={styles.backText}>Назад</Text>
+//     </TouchableOpacity>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   backText: {
+//     color: '#94D8F4',
+//     fontSize: 16,
+//     marginTop: 5,
+//   },
+//   itemNameBox: {
+//     flexDirection: 'row',
+//     justifyContent: 'flex-start',
+//     alignItems: 'center',
+//     width: 'auto',
+//     marginTop: 5,
+//     marginBottom: 4,
+//   },
+//   itemName: {
+//     fontFamily: 'Raleway_600SemiBold',
+//     fontSize: 13,
+//     color: '#333333',
+//     fontWeight: '700',
+//     // width:'86%'
+//   },
+//   itemType: {
+//     fontFamily: 'Raleway_600SemiBold',
+//     fontSize: 13,
+//     color: '#333333',
+//     fontWeight: '700',
+//   },
+// });

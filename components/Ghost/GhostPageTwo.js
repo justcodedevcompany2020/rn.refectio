@@ -216,6 +216,7 @@ export default class GhostPageTwoComponent extends React.Component {
   }
 
   handleShare = async () => {
+    console.log(this.state.company_name_url, 'url');
     const shareingStartWith = 'refectio.ru/';
     try {
       {

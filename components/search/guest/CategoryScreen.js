@@ -435,7 +435,7 @@ export default function CategoryScreenGuest(props) {
                       category,
                       nextUrl,
                       products,
-                      product: index,
+                      product: item.id,
                       clickedItem: item,
                       cityId,
                       startPrice,

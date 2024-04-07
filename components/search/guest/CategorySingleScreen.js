@@ -18,6 +18,7 @@ import Slider2 from '../../slider/Slider2';
 import shuffle from '../shuffle';
 
 const {WIDTH} = Dimensions.get('screen');
+const widthScreen = Dimensions.get('window').width;
 
 export default function CategorySingleScreenGuest({
   category,
@@ -29,24 +30,39 @@ export default function CategorySingleScreenGuest({
   startPrice,
   endPrice,
 }) {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(myproducts);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
   const [nextUrl, setNextUrl] = useState(mynextUrl);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [list, setList] = useState(false);
+  const [index, setindex] = useState(0);
+
   const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
-  const flatListRef = useRef(null);
+  const flatListRef = useRef();
   const navigation = useNavigation();
+  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  // useEffect(() => {
+  //   if (product !== undefined && flatListRef.current !== null) {
+  //     flatListRef.current.scrollToIndex({index: product, animated: true});
+  //   }
+  // }, [product]);
+
+  const layout = (data, index) => ({
+    length: widthScreen - 300,
+    offset: (widthScreen - 300) * index,
+    index,
+  });
 
   useEffect(() => {
     setProduct();
-  }, []);
+  }, [myproducts]);
 
   function setProduct() {
     setProducts(myproducts);
     setLoading(false);
   }
-
+  // console.log(products, 'lll');
   async function getProducts(refresh) {
     let formdata = new FormData();
     if (category.parent) {
@@ -103,18 +119,17 @@ export default function CategorySingleScreenGuest({
     getProducts('refresh');
   };
 
-  const handleScrollToIndex = useCallback(
-    product => {
-      setProducts([
-        params.clickedItem,
-        ...myproducts.filter((_, i) => i !== product),
-      ]);
-    },
-    [product],
-  );
   useEffect(() => {
-    handleScrollToIndex(product);
-  }, [product]);
+    setTimeout(() => {
+      const indexes = products
+        .map((item, index) => (item.id === product ? index : -1))
+        .filter(index => index !== -1);
+      setindex(prevState => indexes[0]);
+      flatListRef.current.scrollToIndex({index: indexes[0], animated: true});
+
+      console.log(typeof indexes[0]);
+    }, 100);
+  }, [list]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
@@ -133,9 +148,23 @@ export default function CategorySingleScreenGuest({
           <Loading />
         ) : (
           <FlatList
+            initialScrollIndex={index}
             ref={flatListRef}
-            onScrollToIndexFailed={info => {
-              handleScrollToIndex(info.index);
+            onScrollToIndexFailed={error => {
+              flatListRef.current.scrollToOffset({
+                offset: error.averageItemLength * error.index,
+                animated: false,
+              });
+
+              setTimeout(() => {
+                if (products.length !== 0 && flatListRef !== null) {
+                  flatListRef.current.scrollToIndex({
+                    index: error.index,
+                    animated: false,
+                  });
+                }
+              }, 100);
+              setLoading(false);
             }}
             showsVerticalScrollIndicator={false}
             keyExtractor={(_, index) => index}
@@ -258,6 +287,14 @@ export default function CategorySingleScreenGuest({
                 onRefresh={handleRefresh}
               />
             }
+            onLayout={info => {
+              // console.log(info, 'onLayout');
+              // handleScrollToIndex();
+              setList(true);
+              setLoading(false);
+              // alert('layout');
+            }}
+            // getItemLayout={layout}
           />
         )}
       </View>
