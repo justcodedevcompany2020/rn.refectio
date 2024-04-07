@@ -725,7 +725,7 @@ export default class CustomerMainPageComponent extends React.Component {
                   onPress={() => {
                     if (Platform.OS === 'ios') {
                       Linking.openURL(
-                        'https://apps.apple.com/us/app/com.JustCode.RefectioApp',
+                        'https://apps.apple.com/us/app/com.JustCode.Refectionapp',
                       );
                     } else {
                       Linking.openURL(

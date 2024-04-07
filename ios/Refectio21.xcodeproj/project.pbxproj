@@ -295,10 +295,10 @@
 				FE181BB5B18348849C335BC8 /* Poppins-ExtraLight.ttf in Resources */,
 				A9748B3FCAD24C35A107D0A1 /* Poppins-Light.ttf in Resources */,
 				42020727019D436C99347303 /* Poppins-Regular.ttf in Resources */,
+				24C6209646AC4242BE39B610 /* Raleway-Light.ttf in Resources */,
+				12922CE69120411FA1E4424B /* Raleway-ExtraBold.ttf in Resources */,
 				433094F19FB34D90B53E4FBD /* Poppins-SemiBold.ttf in Resources */,
 				9FBC86B14EA443CE86F62B57 /* Raleway-Bold.ttf in Resources */,
-				12922CE69120411FA1E4424B /* Raleway-ExtraBold.ttf in Resources */,
-				24C6209646AC4242BE39B610 /* Raleway-Light.ttf in Resources */,
 				390539CE8AAB45B483A48292 /* Raleway-Medium.ttf in Resources */,
 				2106BF5055F24B529D85F353 /* Raleway-SemiBold.ttf in Resources */,
 				79EED0F7D81F40EC9F593F99 /* Poppins-Medium.ttf in Resources */,
@@ -545,7 +545,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Refectio21/Refectio21.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6T3KL2SAKQ;
+				DEVELOPMENT_TEAM = NYHJP23LPC;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Refectio21/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Refectio;
@@ -554,13 +554,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0;
+				MARKETING_VERSION = 1.9;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.JustCode.RefectioApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JustCode.Refectionapp;
 				PRODUCT_NAME = Refectio21;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -576,7 +576,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Refectio21/Refectio21.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6T3KL2SAKQ;
+				DEVELOPMENT_TEAM = NYHJP23LPC;
 				INFOPLIST_FILE = Refectio21/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Refectio;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
@@ -584,13 +584,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0;
+				MARKETING_VERSION = 1.9;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.JustCode.RefectioApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JustCode.Refectionapp;
 				PRODUCT_NAME = Refectio21;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
