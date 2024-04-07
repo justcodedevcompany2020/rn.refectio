@@ -104,13 +104,10 @@ android {
     }
 }
 
-ext {
-    FLIPPER_VERSION = '0.93.0' // Установите здесь актуальную версию Flipper
-}
-
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation('com.facebook.react:react-android')
+
     implementation project(':react-native-fast-image') //add this line
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")

@@ -52,6 +52,8 @@ export default function AboutUsScreen({navigation, value, hideText}) {
     };
   }, []);
 
+  console.log(aboutUs.length);
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       {aboutUs?.length > 0 &&
@@ -99,7 +101,7 @@ export default function AboutUsScreen({navigation, value, hideText}) {
                     overflow: 'hidden',
                     height:
                       aboutUs.length >= 1000
-                        ? aboutUs.length - 200
+                        ? aboutUs.length - 50
                         : aboutUs.length + 100,
                   }}
                   source={{
