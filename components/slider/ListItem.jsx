@@ -12,7 +12,7 @@ const ListItem = React.memo(({item}) => {
   const {width, height} = Dimensions.get('screen');
   const [loading, setLoading] = useState(true);
   const [currentOrintation, setCurrentOrintation] = useState('PORTRAIT');
-  console.log(item, 'item');
+  // console.log(item, 'item');
   useEffect(() => {
     Dimensions.addEventListener('change', ({window: {width, height}}) => {
       if (width < height) {

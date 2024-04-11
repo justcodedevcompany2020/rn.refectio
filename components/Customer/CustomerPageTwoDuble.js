@@ -25,6 +25,7 @@ import Slider2 from '../slider/Slider2';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
 
 const {width: screenWidth} = Dimensions.get('window');
+
 export default class DesignerPageTwoComponentDuble extends React.Component {
   constructor(props) {
     super(props);
@@ -133,7 +134,7 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
   handleClearData = () => {
     this.setState({
       user: [],
-      user_category_for_product: [],
+       user_category_for_product: [],
       city_for_sales_user: [],
       whatsapp: '',
       // products: [],
@@ -144,13 +145,6 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
 
   loadedDataAfterLoadPage = async id => {
     await this.getObjectData(id);
-
-    // await this.updateProduct(
-    //   this.state.parent_name
-    //     ? this.state.parent_name
-    //     : this.state.user_category_for_product[0].parent_category_name,
-    //   id,
-    // );
     this.setState({
       changed:
         this.state.city_for_sales_user.length == this.state.city_count
@@ -202,17 +196,10 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      if (this.props.route.params?.fromSearch) {
-        loadedDataAfterLoadPageOne();
-        this.setState({change_category_loaded: true});
-      }
-      if (
-        this.props.route.params?.prevRoute == 'DesignerPage' &&
-        urlMy == 'yes'
-      ) {
-        loadedDataAfterLoadPageOne();
-        this.setState({change_category_loaded: true});
-      }
+
+      // loadedDataAfterLoadPageOne();
+      this.setState({change_category_loaded: false});
+      this.setState({loading: false});
     });
   }
 
@@ -397,8 +384,6 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
   }
 
   render() {
-    const {fontsLoaded} = this.state;
-    // console.log(this.props.route.params?.id);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.main}>
@@ -599,7 +584,9 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
               marginLeft: -10,
               paddingBottom: 10,
             }}
-            onPress={() => {this.props.navigation.goBack()}}>
+            onPress={() => {
+              this.props.navigation.goBack();
+            }}>
             <Svg
               width={25}
               height={30}
@@ -705,12 +692,6 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
                           style={{
                             flexDirection: 'row',
                             marginTop: 4,
-                            // width:
-                            //   screenWidth > 360
-                            //     ? '62.5%'
-                            //     : screenWidth > 393
-                            //     ? '71%'
-                            //     : '59%',
                           }}>
                           {`${this.state.user[0].saite}` !== 'null' && (
                             <TouchableOpacity
@@ -1116,11 +1097,11 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
                 </ScrollView>
               </View>
 
-              {this.state.change_category_loaded && (
+              {/* {this.state.change_category_loaded && (
                 <View style={{marginTop: 200}}>
                   <ActivityIndicator size={100} color={'#C2C2C2'} />
                 </View>
-              )}
+              )} */}
 
               {!this.state.change_category_loaded &&
                 this.state.products.map((item, index) => {

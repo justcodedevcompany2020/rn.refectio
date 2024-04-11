@@ -55,7 +55,6 @@ export default function CategoryScreenCustomer(props) {
         setKeyboardVisible(false); // or some other action
       },
     );
-
     return () => {
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
@@ -85,8 +84,19 @@ export default function CategoryScreenCustomer(props) {
     })
       .then(response => response.json())
       .then(res => {
-        let arr = shuffle(res.data.data);
-        refresh ? setProducts(arr) : setProducts([...products, ...arr]);
+        let newArr = shuffle(res.data.data);
+        let updatedProducts;
+
+        if (refresh) {
+          updatedProducts = newArr;
+        } else {
+          const existingIds = new Set(products.map(product => product.id));
+          newArr = newArr.filter(product => !existingIds.has(product.id));
+          updatedProducts = products.concat(newArr);
+        }
+
+        setProducts(updatedProducts);
+
         setNextUrl(res.data.next_page_url);
         setIsRefreshing(false);
         setLoading(false);
@@ -407,8 +417,12 @@ export default function CategoryScreenCustomer(props) {
         ) : (
           <FlatList
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => item.id}
             data={products}
+            maxToRenderPerBatch={60}
+            // initialNumToRender={1}
+            // snapToInterval={9}
+            renderToHardwareTextureAndroid={true}
             numColumns={3}
             renderItem={({item, index}) => {
               return (
@@ -418,7 +432,7 @@ export default function CategoryScreenCustomer(props) {
                       category,
                       nextUrl,
                       products,
-                      product: index,
+                      product: item.id,
                       clickedItem: item,
                       cityId,
                       startPrice,

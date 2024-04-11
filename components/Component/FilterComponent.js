@@ -275,28 +275,28 @@ export default class FilterComponent extends React.Component {
     };
 
     await fetch(
-      `https://admin.refectio.ru/public/api/GetCountry`,
+      `https://admin.refectio.ru/public/api/v2/get_country`,
       requestOptions,
     )
       .then(response => response.json())
       .then(result => {
         let made_in_array = [];
-
+        console.log(result, 'aa');
         result.country.forEach(item => {
           made_in_array.push({
-            made_in_name: item.made_in,
+            made_in_name: item.name,
             checked: false,
           });
         });
         const cities = result.city_of_sales;
-        let sanktIndex = cities.findIndex(
-          el => el.city_name == 'Санкт-Петербург',
-        );
-        let removed1 = cities.splice(sanktIndex, 1);
-        cities.unshift(removed1[0]);
-        let moskvaIndex = cities.findIndex(el => el.city_name == 'Москва');
-        let removed2 = cities.splice(moskvaIndex, 1);
-        cities.unshift(removed2[0]);
+        // let sanktIndex = cities.findIndex(
+        //   el => el.city_name == 'Санкт-Петербург',
+        // );
+        // let removed1 = cities.splice(sanktIndex, 1);
+        // cities.unshift(removed1[0]);
+        // let moskvaIndex = cities.findIndex(el => el.city_name == 'Москва');
+        // let removed2 = cities.splice(moskvaIndex, 1);
+        // cities.unshift(removed2[0]);
 
         this.setState({
           made_in_array: made_in_array,

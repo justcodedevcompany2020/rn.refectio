@@ -52,7 +52,7 @@ export default function AboutUsScreen({navigation, value, hideText}) {
     };
   }, []);
 
-  console.log(aboutUs.length);
+  // console.log(aboutUs.length);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>

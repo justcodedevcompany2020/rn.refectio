@@ -75,7 +75,7 @@ export default class GhostPageTwoComponentDuble extends React.Component {
   }
 
   getObjectData = async id => {
-    this.setState({loading: true});
+    // this.setState({loading: true});
     let userID = id;
     // console.log(this.props.id, 'ljj');
 
@@ -194,17 +194,19 @@ export default class GhostPageTwoComponentDuble extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      if (this.props.route.params?.fromSearch) {
-        loadedDataAfterLoadPageOne();
-        this.setState({change_category_loaded: true});
-      }
-      if (
-        this.props.route.params?.prevRoute == 'DesignerPage' &&
-        urlMy == 'yes'
-      ) {
-        loadedDataAfterLoadPageOne();
-        this.setState({change_category_loaded: true});
-      }
+      this.setState({change_category_loaded: false});
+      this.setState({loading: false});
+      // if (this.props.route.params?.fromSearch) {
+      //   loadedDataAfterLoadPageOne();
+      //   this.setState({change_category_loaded: true});
+      // }
+      // if (
+      //   this.props.route.params?.prevRoute == 'DesignerPage' &&
+      //   urlMy == 'yes'
+      // ) {
+      //   loadedDataAfterLoadPageOne();
+      //   this.setState({change_category_loaded: true});
+      // }
     });
   }
 
@@ -216,6 +218,7 @@ export default class GhostPageTwoComponentDuble extends React.Component {
   }
 
   handleShare = async () => {
+    console.log(this.state.company_name_url, 'url');
     const shareingStartWith = 'refectio.ru/';
     try {
       {
@@ -588,9 +591,7 @@ export default class GhostPageTwoComponentDuble extends React.Component {
               marginLeft: -10,
               paddingBottom: 10,
             }}
-            onPress={() => {
-              this.props.navigation.goBack();
-            }}>
+            onPress={this.handleBackButtonClick}>
             <Svg
               width={25}
               height={30}

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  RefreshControl,
   Dimensions,
   FlatList,
   Image,
@@ -28,7 +29,6 @@ const {width} = Dimensions.get('screen');
 
 export default function CategoryScreenDesigner(props) {
   const {category, parentCategoryType, navigation, prevRoute, route} = props;
-
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
@@ -59,7 +59,6 @@ export default function CategoryScreenDesigner(props) {
         setKeyboardVisible(false); // or some other action
       },
     );
-
     return () => {
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
@@ -89,8 +88,19 @@ export default function CategoryScreenDesigner(props) {
     })
       .then(response => response.json())
       .then(res => {
-        let arr = shuffle(res.data.data);
-        refresh ? setProducts(arr) : setProducts([...products, ...arr]);
+        let newArr = shuffle(res.data.data);
+        let updatedProducts;
+
+        if (refresh) {
+          updatedProducts = newArr;
+        } else {
+          const existingIds = new Set(products.map(product => product.id));
+          newArr = newArr.filter(product => !existingIds.has(product.id));
+          updatedProducts = products.concat(newArr);
+        }
+
+        setProducts(updatedProducts);
+
         setNextUrl(res.data.next_page_url);
         setIsRefreshing(false);
         setLoading(false);
@@ -163,7 +173,7 @@ export default function CategoryScreenDesigner(props) {
           onPressBack={() => {
             const routes = navigation.getState()?.routes;
             const prevRoute =
-              routes[routes.length - 2].name === 'DesignerPageTwo'
+              routes[routes.length - 2].name === 'GhostPageTwo'
                 ? 'SubCategoryScreen'
                 : routes[routes.length - 2].name;
             return filterMode
@@ -411,8 +421,12 @@ export default function CategoryScreenDesigner(props) {
         ) : (
           <FlatList
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => item.id}
             data={products}
+            maxToRenderPerBatch={60}
+            // initialNumToRender={1}
+            // snapToInterval={9}
+            renderToHardwareTextureAndroid={true}
             numColumns={3}
             renderItem={({item, index}) => {
               return (
@@ -422,7 +436,7 @@ export default function CategoryScreenDesigner(props) {
                       category,
                       nextUrl,
                       products,
-                      product: index,
+                      product: item.id,
                       clickedItem: item,
                       cityId,
                       startPrice,
@@ -467,8 +481,15 @@ export default function CategoryScreenDesigner(props) {
               </Text>
             )}
             onEndReached={handleLoadMore}
-            onEndReachedThreshold={1}
+            onEndReachedThreshold={0.1}
             ListFooterComponent={renderFooter}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                colors={['#94D8F4']}
+                onRefresh={handleRefresh}
+              />
+            }
           />
         )}
       </View>

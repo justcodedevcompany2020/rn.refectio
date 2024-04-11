@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  Dimensions,
   FlatList,
   Image,
   RefreshControl,
@@ -13,12 +12,10 @@ import {
 } from 'react-native';
 import {Path, Svg} from 'react-native-svg';
 import Loading from '../../Component/Loading';
-import GhostNavComponent from '../../Ghost/GhostNav';
+// import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
 import Slider2 from '../../slider/Slider2';
 import shuffle from '../shuffle';
-
-const {WIDTH} = Dimensions.get('screen');
-const widthScreen = Dimensions.get('window').width;
+import GhostNavComponent from '../../Ghost/GhostNav';
 
 export default function CategorySingleScreenGuest({
   category,
@@ -30,39 +27,24 @@ export default function CategorySingleScreenGuest({
   startPrice,
   endPrice,
 }) {
-  const [products, setProducts] = useState(myproducts);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
   const [nextUrl, setNextUrl] = useState(mynextUrl);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [list, setList] = useState(false);
-  const [index, setindex] = useState(0);
-
   const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
-  const flatListRef = useRef();
+  const flatListRef = useRef(null);
   const navigation = useNavigation();
-  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  // useEffect(() => {
-  //   if (product !== undefined && flatListRef.current !== null) {
-  //     flatListRef.current.scrollToIndex({index: product, animated: true});
-  //   }
-  // }, [product]);
-
-  const layout = (data, index) => ({
-    length: widthScreen - 300,
-    offset: (widthScreen - 300) * index,
-    index,
-  });
 
   useEffect(() => {
     setProduct();
-  }, [myproducts]);
+  }, []);
 
   function setProduct() {
     setProducts(myproducts);
     setLoading(false);
   }
-  // console.log(products, 'lll');
+
   async function getProducts(refresh) {
     let formdata = new FormData();
     if (category.parent) {
@@ -119,17 +101,20 @@ export default function CategorySingleScreenGuest({
     getProducts('refresh');
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      const indexes = products
-        .map((item, index) => (item.id === product ? index : -1))
-        .filter(index => index !== -1);
-      setindex(prevState => indexes[0]);
-      flatListRef.current.scrollToIndex({index: indexes[0], animated: true});
+  const compareRandom = (a, b) => {
+    return Math.random() - 0.5;
+  };
 
-      console.log(typeof indexes[0]);
-    }, 100);
-  }, [list]);
+  const handleScrollToIndex = () => {
+    const selectedItem = params.clickedItem;
+    const allItems = myproducts.filter(item => item !== selectedItem);
+    allItems.sort(compareRandom);
+    setProducts([selectedItem, ...allItems]);
+  };
+
+  useEffect(() => {
+    handleScrollToIndex(product);
+  }, [product]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
@@ -139,56 +124,41 @@ export default function CategorySingleScreenGuest({
           paddingHorizontal: 15,
           position: 'relative',
         }}>
-        <BackBtn
-          onPressBack={() => {
-            navigation.goBack();
-          }}
-        />
+        <BackBtn onPressBack={() => navigation.goBack()} />
         {loading ? (
           <Loading />
         ) : (
           <FlatList
-            initialScrollIndex={index}
             ref={flatListRef}
-            onScrollToIndexFailed={error => {
-              flatListRef.current.scrollToOffset({
-                offset: error.averageItemLength * error.index,
-                animated: false,
-              });
-
-              setTimeout(() => {
-                if (products.length !== 0 && flatListRef !== null) {
-                  flatListRef.current.scrollToIndex({
-                    index: error.index,
-                    animated: false,
-                  });
-                }
-              }, 100);
-              setLoading(false);
+            onScrollToIndexFailed={info => {
+              handleScrollToIndex(info.index);
             }}
             showsVerticalScrollIndicator={false}
             keyExtractor={(_, index) => index}
             data={products}
-            renderItem={({item}) => {
+            renderItem={({item, _}) => {
               return (
-                <View style={{marginTop: 15}}>
-                  <Slider2 slid={item?.product_image} searchMode />
+                <View
+                  style={{
+                    marginTop: 15,
+                  }}>
+                  <Slider2 slid={item.product_image} />
                   <TouchableOpacity
                     style={{flexDirection: 'row', marginTop: 10}}
                     onPress={() => {
                       const routes = navigation.getState()?.routes;
-                      // const prevRoute = routes[routes.length - 2];
+                      const prevRoute = routes[routes.length - 2];
                       navigation.navigate('GhostPageTwoComponentDuble', {
                         id: item.user_product.id,
                         fromSearch: true,
-                        prevRoute: 'CategorySingleScreen',
+                        prevRoute,
                       });
                     }}>
                     <Image
                       source={{
                         uri:
                           `https://admin.refectio.ru/storage/app/uploads/` +
-                          item?.user_product.logo,
+                          item.user_product.logo,
                       }}
                       style={{
                         width: 50,
@@ -197,7 +167,10 @@ export default function CategorySingleScreenGuest({
                         borderRadius: 15,
                       }}
                     />
-                    <View style={{width: '90%'}}>
+                    <View
+                      style={{
+                        width: '90%',
+                      }}>
                       <View style={styles.itemNameBox}>
                         <Text style={styles.itemName}>
                           {item.name.length > 35
@@ -205,7 +178,7 @@ export default function CategorySingleScreenGuest({
                             : item.name}
                         </Text>
                       </View>
-                      {item?.facades && (
+                      {item.facades && (
                         <Text style={{width: '92%'}}>
                           Фасады : {item.facades}
                         </Text>
@@ -287,14 +260,6 @@ export default function CategorySingleScreenGuest({
                 onRefresh={handleRefresh}
               />
             }
-            onLayout={info => {
-              // console.log(info, 'onLayout');
-              // handleScrollToIndex();
-              setList(true);
-              setLoading(false);
-              // alert('layout');
-            }}
-            // getItemLayout={layout}
           />
         )}
       </View>
