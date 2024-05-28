@@ -124,6 +124,7 @@ export default class ForgetPasswordComponent extends Component {
               placeholder="+7 (975) 991-99-99"
               style={[
                 {
+                  color:'#5B5B5B',
                   borderWidth: 1,
                   borderColor: "#F5F5F5",
                   padding: 10,

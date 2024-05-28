@@ -33,12 +33,13 @@ export default class GhostPageComponent extends React.Component {
       countMeshok: 0,
       version: false,
       fontsLoaded: false,
-
+      filtering: false,
       searchUser: '',
 
       page: 1,
       isLoading: false,
       isLastPage: false,
+      pageSearch: 1,
     };
 
     this.handler = this.handler.bind(this);
@@ -63,11 +64,12 @@ export default class GhostPageComponent extends React.Component {
   };
 
   getProductsFunction = async () => {
+    console.log('aaaaaa');
     const {page, getAllProducts, isLastPage} = this.state;
 
     this.setState({
       searchUserButton: false,
-      searchUser: '',
+      // searchUser: '',
     });
 
     if (isLastPage) {
@@ -129,6 +131,7 @@ export default class GhostPageComponent extends React.Component {
   };
 
   handler(filter_data) {
+    this.setState({filtering: true});
     let meshok = filter_data.meshok;
     let category_name =
       filter_data.category_name.length > 0
@@ -172,15 +175,26 @@ export default class GhostPageComponent extends React.Component {
           return false;
         }
         let data = res.data.user;
-
         let filtered_category_name = res.data.returnCategoryNameArray[0];
 
         for (let i = 0; i < data?.length; i++) {
-          if (data[i].slider_photo?.length > 0) {
+          // console.log(
+          //   data[i].slider_photo[i]?.user_id == data[i].id,
+          //   data[i].slider_photo,
+          //   data[i].slider_photo[1]?.user_id,
+          //   data[i].id,
+          // );
+          if (
+            data[i].slider_photo?.length > 0 &&
+            data[i].slider_photo[1]?.user_id == data[i].id
+          ) {
             let product_image = data[i].slider_photo;
-            product_image?.length > 5 ? product_image.splice(5) : null;
+            product_image.length > 5 ? product_image.splice(5) : null;
             data[i].images = product_image;
-          } else if (data[i].user_product_limit1?.length < 1) {
+          } else if (
+            data[i].user_product_limit1?.length < 1 &&
+            data[i].id == data[i].user_product_limit1[0]?.user_id
+          ) {
             data[i].images = [];
             continue;
           } else {
@@ -225,9 +239,16 @@ export default class GhostPageComponent extends React.Component {
     });
   };
 
-  searchUser = async text => {
-    await this.setState({searchUser: text});
+  searchUser = async () => {
+    await this.setState({getAllProducts: []});
 
+    if (this.state.isLastPage) {
+      return;
+    }
+    console.log(22000);
+
+    const {pageSearch, getAllProducts} = this.state;
+    console.log(pageSearch, 'all');
     let formdata = new FormData();
     formdata.append('company_name', this.state.searchUser);
 
@@ -237,39 +258,65 @@ export default class GhostPageComponent extends React.Component {
       redirect: 'follow',
     };
 
-    await fetch(
-      `https://admin.refectio.ru/public/api/searchProizvoditel`,
+    this.setState({
+      searchUserButton: false,
+    });
+
+    const response = await fetch(
+      `https://admin.refectio.ru/public/api/v2/searchProizvoditel?page=${pageSearch}`,
       requestOptions,
-    )
-      .then(response => response.json())
-      .then(res => {
-        if (res.status === true) {
-          let data = res.data.user;
-          let new_data_result = [];
+    );
 
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].user_product_limit1.length < 1) {
-              data[i].images = [];
-              continue;
-            }
-
-            let product_image = data[i].user_product_limit1[0].product_image;
-            data[i].images = product_image;
-          }
-
-          this.setState({
-            getAllProducts: data,
-          });
-        } else if (res.status === false) {
-          this.setState({
-            getAllProducts: [],
-          });
+    const result = await response.json();
+    console.log(result, 'as');
+    if (result.status === true) {
+      const data = result.data.user;
+      data.data.forEach(item => {
+        // console.log(
+        //   item.slider_photo,
+        //   'slider',
+        //   item.id,
+        //   item.slider_photo[0]?.user_id,
+        //   item.slider_photo[0]?.user_id == item.id,
+        // );
+        if (
+          item.slider_photo?.length &&
+          item.slider_photo[0]?.user_id == item.id
+        ) {
+          const productImage = item.slider_photo;
+          productImage.length >= 5 ? productImage.splice(5) : null;
+          item.images = productImage;
+          console.log(productImage);
+        } else if (
+          item.user_product_limit1?.length < 1 &&
+          item.id === item.user_product_limit1[0]?.user_id
+        ) {
+          item.images = [];
+        } else {
+          const productImage = item.user_product_limit1[0]?.product_image;
+          productImage?.length >= 5 ? productImage.splice(5) : null;
+          item.images = productImage;
         }
-      })
-      .catch(error => console.log('error', error));
-  };
+      });
 
-  formImageData = new FormData();
+      const newProducts = [...getAllProducts, ...data.data];
+
+      this.setState({
+        getAllProducts: newProducts,
+        // pageSearch: pageSearch + 1,
+        isLastPage: result.data.isLastPage,
+      });
+    } else if (result.status === false) {
+      this.setState({
+        getAllProducts: [],
+      });
+    } else {
+      this.setState({
+        isLastPage: true,
+        isLoading: false,
+      });
+    }
+  };
 
   componentDidMount() {
     const {navigation} = this.props;
@@ -310,7 +357,6 @@ export default class GhostPageComponent extends React.Component {
   componentWillUnmount() {
     if (this.focusListener) {
       this.focusListener();
-      console.log('Bum END');
     }
 
     this.keyboardDidShowListener.remove();
@@ -423,9 +469,8 @@ export default class GhostPageComponent extends React.Component {
               })}
             </ScrollView>
           </View>
-          {item.images.filter(value => value.user_id === item.id) && (
-            <Slider2 slid={item.images} />
-          )}
+
+          <Slider2 slid={item.images} />
         </View>
       )
     );
@@ -441,9 +486,10 @@ export default class GhostPageComponent extends React.Component {
   };
 
   handleLoadMore = () => {
+    const {pageSearch} = this.state;
     this.getProductsFunction();
+    this.setState({pageSearch: pageSearch + 1});
   };
-
   closePopup(value) {
     this.setState({filter: value});
   }
@@ -452,14 +498,12 @@ export default class GhostPageComponent extends React.Component {
     try {
       await AsyncStorage.setItem('app', 'close');
       await AsyncStorage.setItem('appVersion', '');
-      console.log('Data stored successfully!');
     } catch (error) {
       console.error('Error storing data:', error);
     }
   };
 
   render() {
-    // console.log(this.state.version, '');
     if (!this.state.fontsLoaded) {
       return null;
     } else {
@@ -569,8 +613,13 @@ export default class GhostPageComponent extends React.Component {
 
             <View style={styles.searchParent}>
               <TouchableOpacity
-                onPress={() => {
-                  this.getProductsFunction();
+                onPress={async () => {
+                  await this.setState({
+                    searchUser: '',
+                    getAllProducts: [],
+                    page: 1,
+                  });
+                  await this.getProductsFunction();
                 }}>
                 {this.state.searchUser !== '' ? (
                   <Svg
@@ -602,6 +651,7 @@ export default class GhostPageComponent extends React.Component {
                 placeholder="Поиск"
                 placeholderTextColor="#000"
                 style={{
+                  color: '#5B5B5B',
                   width: '85%',
                   height: '100%',
                   borderColor: '#D9D9D9',
@@ -611,8 +661,22 @@ export default class GhostPageComponent extends React.Component {
                   fontFamily: 'Poppins_500Medium',
                 }}
                 value={this.state.searchUser}
-                onChangeText={text => {
-                  this.searchUser(text);
+                onChangeText={async text => {
+                  if (this.state.filtering) {
+                    // this.resetFilterData();
+                    await this.clearAllData();
+                    await this.setState({
+                      filter: false,
+                    });
+
+                    console.log(100000000000000000000);
+                    await this.setState({searchUser: text, pageSearch: 1});
+                    await this.searchUser(text);
+                    await this.setState({filtering: false});
+                  }
+
+                  await this.setState({searchUser: text, pageSearch: 1});
+                  await this.searchUser(text);
                 }}
               />
               <TouchableOpacity onPress={() => this.modalState()}>
@@ -630,6 +694,7 @@ export default class GhostPageComponent extends React.Component {
               </TouchableOpacity>
             </View>
             {this.state.getAllProducts.length == 0 &&
+              !this.state.filtering &&
               this.state.isLoading === false && (
                 <Text
                   style={{fontSize: 20, marginTop: 50, textAlign: 'center'}}>

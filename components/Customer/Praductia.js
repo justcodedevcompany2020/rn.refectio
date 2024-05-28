@@ -443,6 +443,7 @@ export default class PraductiaComponent extends React.Component {
                       fontFamily: 'Poppins_400Regular',
                       marginTop: 30,
                       fontSize: 16,
+                      color: '#5B5B5B',
                     }}>
                     Подтвердите удаление выбранной{'\n'}продукции
                   </Text>
@@ -759,9 +760,7 @@ export default class PraductiaComponent extends React.Component {
                           width: '100%',
                         }}>
                         <View style={styles.itemNameBox}>
-                          <Text style={styles.itemName}>
-                            {item.name}
-                          </Text>
+                          <Text style={styles.itemName}>{item.name}</Text>
                         </View>
 
                         <TouchableOpacity
@@ -774,36 +773,54 @@ export default class PraductiaComponent extends React.Component {
                             style={{
                               fontSize: 40,
                               lineHeight: 20,
+                              color: '#5B5B5B',
                             }}>
                             ...
                           </Text>
                         </TouchableOpacity>
                       </View>
                       {item.facades && (
-                        <Text style={{width: '95%'}}>
+                        <Text style={{width: '95%', color: '#5B5B5B'}}>
                           Фасады : {item.facades}
                         </Text>
                       )}
-                      {item.frame && <Text>Корпус: {item.frame}</Text>}
-                      {item.profile && <Text>Профиль: {item.profile}</Text>}
+                      {item.frame && (
+                        <Text style={{color: '#5B5B5B'}}>
+                          Корпус: {item.frame}
+                        </Text>
+                      )}
+                      {item.profile && (
+                        <Text style={{color: '#5B5B5B'}}>
+                          Профиль: {item.profile}
+                        </Text>
+                      )}
                       {item.tabletop && (
                         <Text
                           style={{
                             width: '90%',
+                            color: '#5B5B5B',
                           }}>
                           Столешница: {item.tabletop}
                         </Text>
                       )}
                       {item.length && (
-                        <Text>Длина: {item.length.replace('.', ',')} м.</Text>
+                        <Text style={{color: '#5B5B5B'}}>
+                          Длина: {item.length.replace('.', ',')} м.
+                        </Text>
                       )}
                       {item.height && (
-                        <Text>Высота: {item.height.replace('.', ',')} м.</Text>
+                        <Text style={{color: '#5B5B5B'}}>
+                          Высота: {item.height.replace('.', ',')} м.
+                        </Text>
                       )}
-                      {item.material && <Text>Материал: {item.material}</Text>}
+                      {item.material && (
+                        <Text style={{color: '#5B5B5B'}}>
+                          Материал: {item.material}
+                        </Text>
+                      )}
 
                       {item.price && (
-                        <Text>
+                        <Text style={{color: '#5B5B5B'}}>
                           Цена:{' '}
                           {item.price
                             .toString()
@@ -822,11 +839,7 @@ export default class PraductiaComponent extends React.Component {
               ref={this.bottomSheetRef}
               stackBehavior="push"
               snapPoints={this.snapPoints}
-              onDismiss={() => this.setState({bottomSheetBool: false})}
-
-              // onChange={handleSheetChanges}
-              // backgroundStyle={{backgroundColor: 'black'}}
-            >
+              onDismiss={() => this.setState({bottomSheetBool: false})}>
               <View style={styles.contentContainer}>
                 <TouchableOpacity
                   onPress={() => {
@@ -848,7 +861,7 @@ export default class PraductiaComponent extends React.Component {
                     }}
                     resizeMode={'contain'}
                   />
-                  <Text style={{fontSize: 16}}>Удалить</Text>
+                  <Text style={{fontSize: 16, color: '#5B5B5B'}}>Удалить</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -875,7 +888,9 @@ export default class PraductiaComponent extends React.Component {
                     }}
                     resizeMode={'contain'}
                   />
-                  <Text style={{fontSize: 16}}>Редактировать</Text>
+                  <Text style={{fontSize: 16, color: '#5B5B5B'}}>
+                    Редактировать
+                  </Text>
                 </TouchableOpacity>
               </View>
             </BottomSheetModal>
@@ -946,6 +961,7 @@ const styles = StyleSheet.create({
   slideText: {
     paddingHorizontal: 16,
     paddingTop: 8,
+    color: '#5B5B5B',
     paddingBottom: 10,
     fontFamily: 'Raleway_600SemiBold',
   },

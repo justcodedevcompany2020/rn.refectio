@@ -69,6 +69,7 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
       dmodel_popup: false,
       city_count: null,
       about_us: '',
+      meshok: '',
       aboutUsPopup: false,
 
       aboutProductPopup: false,
@@ -120,6 +121,7 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
         this.setState({loading: false});
         // console.log(this.state.loading);
         this.setState({
+          meshok: res.data.user[0].meshok,
           company_name_url: res.data.user[0].company_name_url,
           user: res.data.user,
           user_category_for_product: arr,
@@ -134,7 +136,7 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
   handleClearData = () => {
     this.setState({
       user: [],
-       user_category_for_product: [],
+      user_category_for_product: [],
       city_for_sales_user: [],
       whatsapp: '',
       // products: [],
@@ -1011,6 +1013,7 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
                     this.props.navigation.navigate('AboutUsScreen', {
                       value: this.state.about_us,
                       hideText: true,
+                      meshok: this.state.meshok,
                     });
                   }}>
                   <Image
@@ -1181,6 +1184,7 @@ export default class DesignerPageTwoComponentDuble extends React.Component {
                                   {
                                     value: item.about,
                                     hideText: true,
+                                    meshok: 'no',
                                   },
                                 )
                               }>
@@ -1282,6 +1286,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     fontFamily: 'Raleway_500Medium',
+    color: '#969696',
   },
   sOpenCityDropDown: {
     width: '60%',

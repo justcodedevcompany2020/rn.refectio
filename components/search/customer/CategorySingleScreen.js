@@ -179,7 +179,7 @@ export default function CategorySingleScreenCustomer({
                         </Text>
                       </View>
                       {item.facades && (
-                        <Text style={{width: '92%'}}>
+                        <Text style={{width: '92%', color: '#5B5B5B'}}>
                           Фасады : {item.facades}
                         </Text>
                       )}
@@ -187,6 +187,7 @@ export default function CategorySingleScreenCustomer({
                         <Text
                           style={{
                             width: '90%',
+                            color: '#5B5B5B',
                           }}>
                           Корпус: {item.frame}
                         </Text>
@@ -195,6 +196,7 @@ export default function CategorySingleScreenCustomer({
                         <Text
                           style={{
                             width: '90%',
+                            color: '#5B5B5B',
                           }}>
                           Профиль: {item.profile}
                         </Text>
@@ -203,6 +205,7 @@ export default function CategorySingleScreenCustomer({
                         <Text
                           style={{
                             width: '90%',
+                            color: '#5B5B5B',
                           }}>
                           Столешница: {item.tabletop}
                         </Text>
@@ -211,6 +214,8 @@ export default function CategorySingleScreenCustomer({
                         <Text
                           style={{
                             width: '90%',
+
+                            color: '#5B5B5B',
                           }}>
                           Длина: {item.length.replace('.', ',')} м.
                         </Text>
@@ -219,6 +224,7 @@ export default function CategorySingleScreenCustomer({
                         <Text
                           style={{
                             width: '90%',
+                            color: '#5B5B5B',
                           }}>
                           Высота: {item.height.replace('.', ',')} м.
                         </Text>
@@ -227,12 +233,13 @@ export default function CategorySingleScreenCustomer({
                         <Text
                           style={{
                             width: '90%',
+                            color: '#5B5B5B',
                           }}>
                           Материал: {item.material}
                         </Text>
                       )}
                       {item.price && (
-                        <Text>
+                        <Text style={{color: '#5B5B5B'}}>
                           Цена:{' '}
                           {item.price
                             .toString()
@@ -316,6 +323,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#333333',
     fontWeight: '700',
+    color: '#5B5B5B',
   },
   itemType: {
     fontFamily: 'Raleway_600SemiBold',

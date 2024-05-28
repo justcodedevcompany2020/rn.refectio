@@ -45,7 +45,7 @@ import AddZakazchikDesignerComponent from './components/Designer/Live/AddZakazch
 import LiveZakazchikSinglDesignerComponent from './components/Designer/Live/LiveZakazchikSinglDesigner';
 import ZakaziLiveDesignerComponent from './components/Designer/Live/ZakaziLiveDesigner';
 import ModalComponent from './components/Ghost/Modal';
-
+import IconsPage from './components/Designer/Live/IconsPage';
 import AppUpdateAvailable from './components/AppUpdateAvailable';
 import AboutUsScreen from './components/Customer/AboutUsScreen';
 import SelectCategoryScreen from './components/Customer/SelectCategoryScreen';
@@ -287,6 +287,7 @@ function AboutUsScreenComponent({navigation, route}) {
       navigation={navigation}
       value={route.params.value}
       hideText={route.params.hideText}
+      meshok={route.params.meshok}
     />
   );
 }
@@ -431,8 +432,10 @@ export default function App() {
         setIsLoading(false);
         console.log('Opened chat for user useeeg:', id);
         setUrlMy('yes');
+        console.log(1);
       } else {
         setUrlMy('');
+        console.log(2);
       }
     };
 
@@ -623,54 +626,54 @@ export default function App() {
         />
         <NavigationContainer>
           {loginState.userToken !== null && loginState.userRole == '2' ? (
-              <Stack.Navigator
-                initialRouteName={
-                  urlLinking?.length > 0 &&
-                  loginState.userRole == '2' &&
-                  loginState.userToken !== null
-                    ? 'DesignerPageTwo'
-                    : 'DesignerPage'
-                }
-                screenOptions={({route}) => ({
-                  lazy: true,
-                  tabBarShowLabel: false,
-                  headerShown: false,
-                  tabBarActiveTintColor: '#2EB6A5',
-                  tabBarInactiveTintColor: 'gray',
-                  tabBarStyle: tabBarStyle,
-                })}>
-                {urlLinking?.length > 0 &&
+            <Stack.Navigator
+              initialRouteName={
+                urlLinking?.length > 0 &&
                 loginState.userRole == '2' &&
-                loginState.userToken !== null ? (
-                  <>
-                    <Stack.Screen
-                      name="DesignerPageTwo"
-                      options={{headerShown: false}}>
-                      {props => (
-                        <DesignerPageTwoComponent
-                          {...props}
-                          id={id}
-                          setId={setId}
-                          setUrlLinking={setUrlLinking}
-                          urlMy={urlMy}
-                        />
-                      )}
-                    </Stack.Screen>
-                  </>
-                ) : (
-                  <>
-                    <Stack.Screen name="DesignerPage">
-                      {props => (
-                        <DesignerPageComponent {...props} setId={setId} />
-                      )}
-                    </Stack.Screen>
-                  </>
-                )}
-                {urlLinking?.length > 0 &&
-                loginState.userRole == '2' &&
-                loginState.userToken !== null ? (
-                  <>
-                    {/* <Stack.Screen
+                loginState.userToken !== null
+                  ? 'DesignerPageTwo'
+                  : 'DesignerPage'
+              }
+              screenOptions={({route}) => ({
+                lazy: true,
+                tabBarShowLabel: false,
+                headerShown: false,
+                tabBarActiveTintColor: '#2EB6A5',
+                tabBarInactiveTintColor: 'gray',
+                tabBarStyle: tabBarStyle,
+              })}>
+              {urlLinking?.length > 0 &&
+              loginState.userRole == '2' &&
+              loginState.userToken !== null ? (
+                <>
+                  <Stack.Screen
+                    name="DesignerPageTwo"
+                    options={{headerShown: false}}>
+                    {props => (
+                      <DesignerPageTwoComponent
+                        {...props}
+                        id={id}
+                        setId={setId}
+                        setUrlLinking={setUrlLinking}
+                        urlMy={urlMy}
+                      />
+                    )}
+                  </Stack.Screen>
+                </>
+              ) : (
+                <>
+                  <Stack.Screen name="DesignerPage">
+                    {props => (
+                      <DesignerPageComponent {...props} setId={setId} />
+                    )}
+                  </Stack.Screen>
+                </>
+              )}
+              {urlLinking?.length > 0 &&
+              loginState.userRole == '2' &&
+              loginState.userToken !== null ? (
+                <>
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{path: 'DesignerPageTwo'}}
@@ -678,15 +681,15 @@ export default function App() {
                       gestureEnabled: false,
                     }}
                   /> */}
-                    <Stack.Screen name="DesignerPage">
-                      {props => (
-                        <DesignerPageComponent {...props} setId={setId} />
-                      )}
-                    </Stack.Screen>
-                  </>
-                ) : (
-                  <>
-                    {/* <Stack.Screen
+                  <Stack.Screen name="DesignerPage">
+                    {props => (
+                      <DesignerPageComponent {...props} setId={setId} />
+                    )}
+                  </Stack.Screen>
+                </>
+              ) : (
+                <>
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{path: 'DesignerPageTwo'}}
@@ -694,143 +697,144 @@ export default function App() {
                       gestureEnabled: false,
                     }}
                   /> */}
-                    <Stack.Screen
-                      name="DesignerPageTwo"
-                      options={{headerShown: false}}>
-                      {props => (
-                        <DesignerPageTwoComponent
-                          {...props}
-                          id={id}
-                          setId={setId}
-                          setUrlLinking={setUrlLinking}
-                          urlMy={urlMy}
-                        />
-                      )}
-                    </Stack.Screen>
-                  </>
+                  <Stack.Screen
+                    name="DesignerPageTwo"
+                    options={{headerShown: false}}>
+                    {props => (
+                      <DesignerPageTwoComponent
+                        {...props}
+                        id={id}
+                        setId={setId}
+                        setUrlLinking={setUrlLinking}
+                        urlMy={urlMy}
+                      />
+                    )}
+                  </Stack.Screen>
+                </>
+              )}
+              {/* DesignerPageTwoSavedComponent */}
+
+              <Stack.Screen
+                name="DesignerPageTwoSavedComponent"
+                options={{headerShown: false}}>
+                {props => (
+                  <DesignerPageTwoSavedComponent
+                    {...props}
+                    // id={id}
+                    // setId={setId}
+                    // setUrlLinking={setUrlLinking}
+                  />
                 )}
-                {/* DesignerPageTwoSavedComponent */}
+              </Stack.Screen>
+              <Stack.Screen
+                name="EditZakaziLive"
+                component={EditZakazchikDesignerComponent}
+              />
 
-                <Stack.Screen
-                  name="DesignerPageTwoSavedComponent"
-                  options={{headerShown: false}}>
-                  {props => (
-                    <DesignerPageTwoSavedComponent
-                      {...props}
-                      // id={id}
-                      // setId={setId}
-                      // setUrlLinking={setUrlLinking}
-                    />
-                  )}
-                </Stack.Screen>
-                <Stack.Screen
-                  name="EditZakaziLive"
-                  component={EditZakazchikDesignerComponent}
-                />
+              <Stack.Screen
+                name="DesignerSaved"
+                component={DesignerSavedComponent}
+              />
+              <Stack.Screen
+                name={'Slider'}
+                component={Carousel}
+                options={{
+                  headerTransparent: true,
+                  gestureEnabled: true,
 
-                <Stack.Screen
-                  name="DesignerSaved"
-                  component={DesignerSavedComponent}
-                />
-                <Stack.Screen
-                  name={'Slider'}
-                  component={Carousel}
-                  options={{
-                    headerTransparent: true,
-                    gestureEnabled: true,
+                  animation: 'fade_from_bottom',
 
-                    animation: 'fade_from_bottom',
+                  contentStyle: {
+                    flex: 1,
+                  },
+                  presentation: 'modal',
+                  animationTypeForReplace: 'pop',
+                }}
+              />
+              <Stack.Screen name="MyAccaunt" component={MyAccauntComponent} />
+              <Stack.Screen
+                name="SearchScreen"
+                component={SearchScreenComponentDesigner}
+              />
+              <Stack.Screen name="IconPage" component={IconsPage} />
+              <Stack.Screen
+                name="CategoryScreen"
+                component={CategoryScreenComponentDesigner}
+              />
+              <Stack.Screen
+                name="CategorySingleScreen"
+                component={CategorySingleScreenComponentDesigner}
+              />
+              <Stack.Screen
+                name="SubCategoryScreen"
+                component={SubCategoryScreenComponentDesigner}
+              />
+              <Stack.Screen
+                name="EditPhoneNumberDesigner"
+                component={EditPhoneNumberDesignerComponent}
+              />
+              <Stack.Screen
+                name="EditPhoneNumberDesignerConfirm"
+                component={EditPhoneNumberDesignerConfirm}
+              />
+              <Stack.Screen
+                name="EditPasswordDesigner"
+                component={EditPasswordDesignerCompnent}
+              />
+              <Stack.Screen
+                name="ZakaziLiveDesigner"
+                component={ZakaziLiveDesignerFunc}
+              />
+              <Stack.Screen
+                name="LiveZakazchikSinglDesigner"
+                component={LiveZakazchikSinglDesignerFunc}
+              />
+              <Stack.Screen
+                name="AddZakazchikDesigner"
+                component={AddZakazchikDesignerComponent}
+              />
+              <Stack.Screen
+                name="AboutUsScreen"
+                component={AboutUsScreenComponent}
+              />
+            </Stack.Navigator>
+          ) : // Customer Pages Tabs
 
-                    contentStyle: {
-                      flex: 1,
-                    },
-                    presentation: 'modal',
-                    animationTypeForReplace: 'pop',
-                  }}
-                />
-                <Stack.Screen name="MyAccaunt" component={MyAccauntComponent} />
-                <Stack.Screen
-                  name="SearchScreen"
-                  component={SearchScreenComponentDesigner}
-                />
-                <Stack.Screen
-                  name="CategoryScreen"
-                  component={CategoryScreenComponentDesigner}
-                />
-                <Stack.Screen
-                  name="CategorySingleScreen"
-                  component={CategorySingleScreenComponentDesigner}
-                />
-                <Stack.Screen
-                  name="SubCategoryScreen"
-                  component={SubCategoryScreenComponentDesigner}
-                />
-                <Stack.Screen
-                  name="EditPhoneNumberDesigner"
-                  component={EditPhoneNumberDesignerComponent}
-                />
-                <Stack.Screen
-                  name="EditPhoneNumberDesignerConfirm"
-                  component={EditPhoneNumberDesignerConfirm}
-                />
-                <Stack.Screen
-                  name="EditPasswordDesigner"
-                  component={EditPasswordDesignerCompnent}
-                />
-                <Stack.Screen
-                  name="ZakaziLiveDesigner"
-                  component={ZakaziLiveDesignerFunc}
-                />
-                <Stack.Screen
-                  name="LiveZakazchikSinglDesigner"
-                  component={LiveZakazchikSinglDesignerFunc}
-                />
-                <Stack.Screen
-                  name="AddZakazchikDesigner"
-                  component={AddZakazchikDesignerComponent}
-                />
-                <Stack.Screen
-                  name="AboutUsScreen"
-                  component={AboutUsScreenComponent}
-                />
-              </Stack.Navigator>
-            ) : // Customer Pages Tabs
-
-            loginState.userToken !== null && loginState.userRole == '3' ? (
-                <Stack.Navigator
-                  initialRouteName={
-                    urlLinking?.length > 0 &&
-                    loginState.userRole == '3' &&
-                    loginState.userToken !== null
-                      ? 'CustomerMainPageTwo'
-                      : 'CustomerMainPage'
-                  }
-                  screenOptions={({route}) => ({
-                    lazy: true,
-                    tabBarShowLabel: false,
-                    headerShown: false,
-                    tabBarActiveTintColor: '#2EB6A5',
-                    tabBarInactiveTintColor: 'gray',
-                    tabBarStyle: tabBarStyle,
-                  })}>
-                  {urlLinking?.length > 0 &&
-                  loginState.userRole == '3' &&
-                  loginState.userToken !== null ? (
-                    <>
-                      <Stack.Screen
-                        name="CustomerPageTwo"
-                        options={{headerShown: false}}>
-                        {props => (
-                          <CustomerPageTwoComponent
-                            {...props}
-                            id={id}
-                            setId={setId}
-                            setUrlLinking={setUrlLinking}
-                            urlMy={urlMy}
-                          />
-                        )}
-                      </Stack.Screen>
-                      {/* <Stack.Screen
+          loginState.userToken !== null && loginState.userRole == '3' ? (
+            <Stack.Navigator
+              initialRouteName={
+                urlLinking?.length > 0 &&
+                loginState.userRole == '3' &&
+                loginState.userToken !== null
+                  ? 'CustomerMainPageTwo'
+                  : 'CustomerMainPage'
+              }
+              screenOptions={({route}) => ({
+                lazy: true,
+                tabBarShowLabel: false,
+                headerShown: false,
+                tabBarActiveTintColor: '#2EB6A5',
+                tabBarInactiveTintColor: 'gray',
+                tabBarStyle: tabBarStyle,
+              })}>
+              {urlLinking?.length > 0 &&
+              loginState.userRole == '3' &&
+              loginState.userToken !== null ? (
+                <>
+                  <Stack.Screen
+                    name="CustomerPageTwo"
+                    options={{headerShown: false}}>
+                    {props => (
+                      <CustomerPageTwoComponent
+                        {...props}
+                        id={id}
+                        setId={setId}
+                        setUrlLinking={setUrlLinking}
+                        urlMy={urlMy}
+                      />
+                    )}
+                  </Stack.Screen>
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{
@@ -840,15 +844,15 @@ export default function App() {
                       gestureEnabled: false,
                     }}
                   /> */}
-                    </>
-                  ) : (
-                    <>
-                      <Stack.Screen name="CustomerMainPage">
-                        {props => (
-                          <CustomerMainPageComponent {...props} setId={setId} />
-                        )}
-                      </Stack.Screen>
-                      {/* <Stack.Screen
+                </>
+              ) : (
+                <>
+                  <Stack.Screen name="CustomerMainPage">
+                    {props => (
+                      <CustomerMainPageComponent {...props} setId={setId} />
+                    )}
+                  </Stack.Screen>
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{
@@ -858,160 +862,161 @@ export default function App() {
                       gestureEnabled: false,
                     }}
                   /> */}
-                    </>
-                  )}
-                  {urlLinking?.length > 0 &&
-                  loginState.userRole == '3' &&
-                  loginState.userToken !== null ? (
-                    <>
-                      <Stack.Screen name="CustomerMainPage">
-                        {props => (
-                          <CustomerMainPageComponent {...props} setId={setId} />
-                        )}
-                      </Stack.Screen>
-                    </>
-                  ) : (
-                    <>
-                      <Stack.Screen
-                        name="CustomerPageTwo"
-                        options={{headerShown: false}}>
-                        {props => (
-                          <CustomerPageTwoComponent
-                            {...props}
-                            id={id}
-                            setId={setId}
-                            setUrlLinking={setUrlLinking}
-                          />
-                        )}
-                      </Stack.Screen>
-                    </>
-                  )}
-
+                </>
+              )}
+              {urlLinking?.length > 0 &&
+              loginState.userRole == '3' &&
+              loginState.userToken !== null ? (
+                <>
+                  <Stack.Screen name="CustomerMainPage">
+                    {props => (
+                      <CustomerMainPageComponent {...props} setId={setId} />
+                    )}
+                  </Stack.Screen>
+                </>
+              ) : (
+                <>
                   <Stack.Screen
-                    name={'Slider'}
-                    component={Carousel}
-                    options={{
-                      headerTransparent: true,
-                      gestureEnabled: true,
-
-                      animation: 'fade_from_bottom',
-
-                      contentStyle: {
-                        flex: 1,
-                      },
-                      presentation: 'modal',
-                      animationTypeForReplace: 'pop',
-                    }}
-                  />
-
-                  <Stack.Screen
-                    name="CustomerPageTwoDuble"
+                    name="CustomerPageTwo"
                     options={{headerShown: false}}>
                     {props => (
-                      <CustomerPageTwoComponentDuble
+                      <CustomerPageTwoComponent
                         {...props}
                         id={id}
                         setId={setId}
                         setUrlLinking={setUrlLinking}
-                        urlMy={urlMy}
                       />
                     )}
                   </Stack.Screen>
-                  <Stack.Screen name="AddProduct" component={AddProductScreen} />
-                  {/* <Stack.Screen
+                </>
+              )}
+
+              <Stack.Screen
+                name={'Slider'}
+                component={Carousel}
+                options={{
+                  headerTransparent: true,
+                  gestureEnabled: true,
+
+                  animation: 'fade_from_bottom',
+
+                  contentStyle: {
+                    flex: 1,
+                  },
+                  presentation: 'modal',
+                  animationTypeForReplace: 'pop',
+                }}
+              />
+
+              <Stack.Screen
+                name="CustomerPageTwoDuble"
+                options={{headerShown: false}}>
+                {props => (
+                  <CustomerPageTwoComponentDuble
+                    {...props}
+                    id={id}
+                    setId={setId}
+                    setUrlLinking={setUrlLinking}
+                    urlMy={urlMy}
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="AddProduct" component={AddProductScreen} />
+              {/* <Stack.Screen
                   name="CheckDesigner"
                   component={CheckDesignerComponent}
                 /> */}
 
-                  <Stack.Screen
-                    name="CustomerMyAccaunt"
-                    component={CustomerMyAccauntComponent}
-                  />
-                  <Stack.Screen
-                    name="SelectSubCategoryScreen"
-                    component={SelectSubCategoryScreenComponent}
-                  />
+              <Stack.Screen
+                name="CustomerMyAccaunt"
+                component={CustomerMyAccauntComponent}
+              />
+              <Stack.Screen
+                name="SelectSubCategoryScreen"
+                component={SelectSubCategoryScreenComponent}
+              />
 
-                  <Stack.Screen
-                    name="SelectCategoryScreen"
-                    component={SelectCategoryScreenComponent}
-                  />
-                  <Stack.Screen name="Praductia" component={PraductiaFunc} />
-                  <Stack.Screen
-                    name="EditPhoneNumber"
-                    component={EditPhoneNumberComponent}
-                  />
-                  <Stack.Screen
-                    name="EditPhoneNumberConfirm"
-                    component={EditPhoneNumberConfirmFunc}
-                  />
+              <Stack.Screen
+                name="SelectCategoryScreen"
+                component={SelectCategoryScreenComponent}
+              />
+              <Stack.Screen name="Praductia" component={PraductiaFunc} />
+              <Stack.Screen
+                name="EditPhoneNumber"
+                component={EditPhoneNumberComponent}
+              />
+              <Stack.Screen
+                name="EditPhoneNumberConfirm"
+                component={EditPhoneNumberConfirmFunc}
+              />
 
-                  <Stack.Screen
-                    name="EditPasswordCustomer"
-                    component={EditPasswordCustomerCompnent}
-                  />
-                  <Stack.Screen name="ZakaziLive" component={ZakaziLiveComponent} />
-                  <Stack.Screen
-                    name="LiveZakazchikSingl"
-                    component={LiveZakazchikSinglFunc}
-                  />
-                  <Stack.Screen name="AddZakazi" component={AddZakaziFunc} />
-                  <Stack.Screen name="EditZakazi" component={EditZakaziFunc} />
-                  <Stack.Screen name="EditProduct" component={EditProductScreen} />
-                  <Stack.Screen
-                    name="SearchScreen"
-                    component={SearchScreenComponentCustomer}
-                  />
-                  <Stack.Screen
-                    name="CategoryScreen"
-                    component={CategoryScreenComponentCustomer}
-                  />
-                  <Stack.Screen
-                    name="CategorySingleScreen"
-                    component={CategorySingleScreenComponentCustomer}
-                  />
-                  <Stack.Screen
-                    name="SubCategoryScreen"
-                    component={SubCategoryScreenComponentCustomer}
-                  />
-                  <Stack.Screen
-                    name="AboutUsScreen"
-                    component={AboutUsScreenComponent}
-                  />
-                </Stack.Navigator>
-              ) : // Guest pages tabs
+              <Stack.Screen
+                name="EditPasswordCustomer"
+                component={EditPasswordCustomerCompnent}
+              />
+              <Stack.Screen name="ZakaziLive" component={ZakaziLiveComponent} />
+              <Stack.Screen
+                name="LiveZakazchikSingl"
+                component={LiveZakazchikSinglFunc}
+              />
+              <Stack.Screen name="AddZakazi" component={AddZakaziFunc} />
+              <Stack.Screen name="EditZakazi" component={EditZakaziFunc} />
+              <Stack.Screen name="EditProduct" component={EditProductScreen} />
+              <Stack.Screen
+                name="SearchScreen"
+                component={SearchScreenComponentCustomer}
+              />
+              <Stack.Screen
+                name="CategoryScreen"
+                component={CategoryScreenComponentCustomer}
+              />
+              <Stack.Screen
+                name="CategorySingleScreen"
+                component={CategorySingleScreenComponentCustomer}
+              />
+              <Stack.Screen
+                name="SubCategoryScreen"
+                component={SubCategoryScreenComponentCustomer}
+              />
+              <Stack.Screen
+                name="AboutUsScreen"
+                component={AboutUsScreenComponent}
+              />
+            </Stack.Navigator>
+          ) : // Guest pages tabs
 
-              loginState.userToken == null ? (
-                <Stack.Navigator
-                  initialRouteName={
-                    urlLinking?.length > 0 && loginState.userToken == null
-                      ? 'GhostPageTwo'
-                      : 'GhostPage'
-                  }
-                  screenOptions={({route}) => ({
-                    lazy: true,
-                    tabBarShowLabel: false,
-                    headerShown: false,
-                    tabBarActiveTintColor: '#2EB6A5',
-                    tabBarInactiveTintColor: 'gray',
-                    tabBarStyle: tabBarStyle,
-                  })}>
-                  {urlLinking?.length > 0 && loginState.userToken == null ? (
-                    <>
-                      <Stack.Screen
-                        name="GhostPageTwo"
-                        options={{headerShown: false}}>
-                        {props => (
-                          <GhostPageTwoComponent
-                            {...props}
-                            id={id}
-                            setId={setId}
-                            setUrlLinking={setUrlLinking}
-                            urlMy={urlMy}
-                          />
-                        )}
-                      </Stack.Screen>
-                      {/* <Stack.Screen
+          loginState.userToken == null ? (
+            <Stack.Navigator
+              initialRouteName={
+                urlLinking?.length > 0 && loginState.userToken == null
+                  ? 'GhostPageTwo'
+                  : 'GhostPage'
+              }
+              screenOptions={({route}) => ({
+                lazy: true,
+                tabBarShowLabel: false,
+                headerShown: false,
+                tabBarActiveTintColor: '#2EB6A5',
+                tabBarInactiveTintColor: 'gray',
+                tabBarStyle: tabBarStyle,
+              })}>
+              {urlLinking?.length > 0 && loginState.userToken == null ? (
+                <>
+                  <Stack.Screen
+                    name="GhostPageTwo"
+                    options={{headerShown: false}}>
+                    {props => (
+                      <GhostPageTwoComponent
+                        {...props}
+                        id={id}
+                        setId={setId}
+                        setUrlLinking={setUrlLinking}
+                        urlMy={urlLinking ? 'yes' : ''}
+                        setUrlMy={setUrlMy}
+                      />
+                    )}
+                  </Stack.Screen>
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{
@@ -1021,13 +1026,13 @@ export default function App() {
                       gestureEnabled: false,
                     }}
                   /> */}
-                    </>
-                  ) : (
-                    <>
-                      <Stack.Screen name="GhostPage">
-                        {props => <GhostPageComponent {...props} setId={setId} />}
-                      </Stack.Screen>
-                      {/* <Stack.Screen
+                </>
+              ) : (
+                <>
+                  <Stack.Screen name="GhostPage">
+                    {props => <GhostPageComponent {...props} setId={setId} />}
+                  </Stack.Screen>
+                  {/* <Stack.Screen
                     name="AppUpdateAvailable"
                     component={AppUpdateAvailableScreen}
                     initialParams={{
@@ -1037,10 +1042,10 @@ export default function App() {
                       gestureEnabled: false,
                     }}
                   /> */}
-                    </>
-                  )}
+                </>
+              )}
 
-                  {/* <Stack.Screen
+              {/* <Stack.Screen
                 name="AppUpdateAvailable"
                 component={AppUpdateAvailableScreen}
                 initialParams={{path: 'GhostPage'}}
@@ -1052,119 +1057,125 @@ export default function App() {
               <Stack.Screen name="GhostPage">
                 {props => <GhostPageComponent {...props} setId={setId} />}
               </Stack.Screen> */}
-                  {urlLinking?.length > 0 && loginState.userToken == null ? (
-                    <>
-                      <Stack.Screen name="GhostPage">
-                        {props => <GhostPageComponent {...props} setId={setId} />}
-                      </Stack.Screen>
-                    </>
-                  ) : (
-                    <>
-                      <Stack.Screen
-                        name="GhostPageTwo"
-                        options={{headerShown: false}}>
-                        {props => (
-                          <GhostPageTwoComponent
-                            {...props}
-                            id={id}
-                            setId={setId}
-                            setUrlLinking={setUrlLinking}
-                            urlMy={urlMy}
-                          />
-                        )}
-                      </Stack.Screen>
-                    </>
-                  )}
+              {urlLinking?.length > 0 && loginState.userToken == null ? (
+                <>
+                  <Stack.Screen name="GhostPage">
+                    {props => (
+                      <GhostPageComponent
+                        {...props}
+                        setId={setId}
+                        // urlMy={urlMy}
+                      />
+                    )}
+                  </Stack.Screen>
+                </>
+              ) : (
+                <>
                   <Stack.Screen
-                    name="LoginScreen"
-                    component={LoginScreenComponent}
-                  />
-
-                  <Stack.Screen
-                    name="GhostPageTwoComponentDuble"
+                    name="GhostPageTwo"
                     options={{headerShown: false}}>
                     {props => (
-                      <GhostPageTwoComponentDuble
+                      <GhostPageTwoComponent
                         {...props}
                         id={id}
                         setId={setId}
                         setUrlLinking={setUrlLinking}
-                        urlMy={urlMy}
+                        urlMy={urlLinking ? 'yes' : ''}
+                        setUrlMy={setUrlMy}
                       />
                     )}
                   </Stack.Screen>
-                  {/* GhostPageTwoComponentDuble */}
-                  <Stack.Screen
-                    name={'Slider'}
-                    component={Carousel}
-                    options={{
-                      headerTransparent: true,
-                      gestureEnabled: true,
-
-                      animation: 'fade_from_bottom',
-
-                      contentStyle: {
-                        flex: 1,
-                      },
-                      presentation: 'modal',
-                      animationTypeForReplace: 'pop',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="ConfirmTelScreen"
-                    component={ConfirmTelScreenFunction}
-                  />
-                  <Stack.Screen
-                    name="RegisteredScreen"
-                    component={RegisteredScreenComponent}
-                  />
-                  <Stack.Screen
-                    name="RegisteredUserScreen"
-                    component={RegistrationUserScreenComponent}
-                  />
-                  <Stack.Screen
-                    name="RegistrationManufacturer"
-                    component={RegistrationManufacturerComponent}
-                  />
-                  <Stack.Screen name="AuthScreen" component={AuthScreenComponent} />
-                  <Stack.Screen
-                    name="SearchScreen"
-                    component={SearchScreenComponentGuest}
-                  />
-                  <Stack.Screen
-                    name="CategoryScreen"
-                    component={CategoryScreenComponentGuest}
-                  />
-                  <Stack.Screen
-                    name="CategorySingleScreen"
-                    component={CategorySingleScreenComponentGuest}
-                  />
-                  <Stack.Screen
-                    name="SubCategoryScreen"
-                    component={SubCategoryScreenComponentGuest}
-                  />
-
-                  <Stack.Screen
-                    name="ForgetPassword"
-                    component={ForgetPasswordComponent}
-                  />
-                  <Stack.Screen
-                    name="ForgetPasswordTel"
-                    component={ForgetPasswordTelComponent}
-                  />
-                  <Stack.Screen
-                    name="NewPassword"
-                    component={NewPasswordComponent}
-                  />
-                  <Stack.Screen name="Modal" component={ModalComponent} />
-                  <Stack.Screen
-                    name="AboutUsScreen"
-                    component={AboutUsScreenComponent}
-                  />
-                </Stack.Navigator>
-              ) : (
-                <></>
+                </>
               )}
+              <Stack.Screen
+                name="LoginScreen"
+                component={LoginScreenComponent}
+              />
+
+              <Stack.Screen
+                name="GhostPageTwoComponentDuble"
+                options={{headerShown: false}}>
+                {props => (
+                  <GhostPageTwoComponentDuble
+                    {...props}
+                    id={id}
+                    setId={setId}
+                    setUrlLinking={setUrlLinking}
+                  />
+                )}
+              </Stack.Screen>
+              {/* GhostPageTwoComponentDuble */}
+              <Stack.Screen
+                name={'Slider'}
+                component={Carousel}
+                options={{
+                  headerTransparent: true,
+                  gestureEnabled: true,
+
+                  animation: 'fade_from_bottom',
+
+                  contentStyle: {
+                    flex: 1,
+                  },
+                  presentation: 'modal',
+                  animationTypeForReplace: 'pop',
+                }}
+              />
+              <Stack.Screen
+                name="ConfirmTelScreen"
+                component={ConfirmTelScreenFunction}
+              />
+              <Stack.Screen
+                name="RegisteredScreen"
+                component={RegisteredScreenComponent}
+              />
+              <Stack.Screen
+                name="RegisteredUserScreen"
+                component={RegistrationUserScreenComponent}
+              />
+              <Stack.Screen
+                name="RegistrationManufacturer"
+                component={RegistrationManufacturerComponent}
+              />
+              <Stack.Screen name="AuthScreen" component={AuthScreenComponent} />
+              <Stack.Screen
+                name="SearchScreen"
+                component={SearchScreenComponentGuest}
+              />
+              <Stack.Screen
+                name="CategoryScreen"
+                component={CategoryScreenComponentGuest}
+              />
+              <Stack.Screen
+                name="CategorySingleScreen"
+                component={CategorySingleScreenComponentGuest}
+              />
+              <Stack.Screen
+                name="SubCategoryScreen"
+                component={SubCategoryScreenComponentGuest}
+              />
+
+              <Stack.Screen
+                name="ForgetPassword"
+                component={ForgetPasswordComponent}
+              />
+              <Stack.Screen
+                name="ForgetPasswordTel"
+                component={ForgetPasswordTelComponent}
+              />
+              <Stack.Screen
+                name="NewPassword"
+                component={NewPasswordComponent}
+              />
+              <Stack.Screen name="Modal" component={ModalComponent} />
+              <Stack.Screen
+                name="AboutUsScreen"
+                component={AboutUsScreenComponent}
+              />
+            </Stack.Navigator>
+          ) : (
+            <></>
+          )}
         </NavigationContainer>
       </AuthContext.Provider>
     );

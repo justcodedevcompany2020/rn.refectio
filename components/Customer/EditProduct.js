@@ -786,6 +786,7 @@ export default class EditProductComponent extends React.Component {
               </Text>
               <TextInput
                 underlineColorAndroid="transparent"
+                placeholderTextColor={'#888888'}
                 multiline={false}
                 placeholder="Кухня ЛРАЙ145 МДФ ПВХ Сатин Бежевый/СИСТЕМА"
                 numberOfLines={1}
@@ -798,6 +799,7 @@ export default class EditProductComponent extends React.Component {
                     width: '100%',
                     borderRadius: 5,
                     fontSize: 13.5,
+                    color: '#5B5B5B',
                   },
                   this.state.name_error
                     ? {borderColor: 'red'}
@@ -827,6 +829,7 @@ export default class EditProductComponent extends React.Component {
                 </Text>
                 <TextInput
                   underlineColorAndroid="transparent"
+                  placeholderTextColor={'#888888'}
                   placeholder="Эмаль"
                   keyboardType="default"
                   style={{
@@ -835,6 +838,7 @@ export default class EditProductComponent extends React.Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.material}
                   onChangeText={text => this.setState({material: text})}
@@ -858,6 +862,7 @@ export default class EditProductComponent extends React.Component {
                 </Text>
                 <TextInput
                   underlineColorAndroid="transparent"
+                  placeholderTextColor={'#888888'}
                   placeholder="Эмаль"
                   keyboardType="default"
                   style={{
@@ -866,6 +871,7 @@ export default class EditProductComponent extends React.Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.facades}
                   onChangeText={text => this.setState({facades: text})}
@@ -890,6 +896,7 @@ export default class EditProductComponent extends React.Component {
 
                 <TextInput
                   underlineColorAndroid="transparent"
+                  placeholderTextColor={'#888888'}
                   placeholder="ДСП"
                   keyboardType="default"
                   style={{
@@ -898,6 +905,7 @@ export default class EditProductComponent extends React.Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.frame}
                   onChangeText={text => this.setState({frame: text})}
@@ -922,6 +930,7 @@ export default class EditProductComponent extends React.Component {
                 <TextInput
                   underlineColorAndroid="transparent"
                   placeholder="Aлюминиевый"
+                  placeholderTextColor={'#888888'}
                   keyboardType="default"
                   style={{
                     borderWidth: 1,
@@ -929,6 +938,7 @@ export default class EditProductComponent extends React.Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.profile}
                   onChangeText={text => this.setState({profile: text})}
@@ -952,6 +962,7 @@ export default class EditProductComponent extends React.Component {
                 </Text>
                 <TextInput
                   underlineColorAndroid="transparent"
+                  placeholderTextColor={'#888888'}
                   placeholder="Камень"
                   keyboardType="default"
                   style={{
@@ -960,6 +971,7 @@ export default class EditProductComponent extends React.Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.tabletop}
                   onChangeText={text => this.setState({tabletop: text})}
@@ -984,6 +996,7 @@ export default class EditProductComponent extends React.Component {
                 <TextInput
                   underlineColorAndroid="transparent"
                   placeholder="0.5 метров"
+                  placeholderTextColor={'#888888'}
                   keyboardType="decimal-pad"
                   style={{
                     borderWidth: 1,
@@ -991,6 +1004,7 @@ export default class EditProductComponent extends React.Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.height}
                   onChangeText={text => this.setState({height: text})}
@@ -1015,6 +1029,7 @@ export default class EditProductComponent extends React.Component {
                 <TextInput
                   underlineColorAndroid="transparent"
                   placeholder="8 метров"
+                  placeholderTextColor={'#888888'}
                   keyboardType="numeric"
                   style={{
                     borderWidth: 1,
@@ -1022,6 +1037,7 @@ export default class EditProductComponent extends React.Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state?.length}
                   onChangeText={text => this.setState({length: text})}
@@ -1045,6 +1061,7 @@ export default class EditProductComponent extends React.Component {
               <View style={{flexDirection: 'row'}}>
                 <TextInput
                   underlineColorAndroid="transparent"
+                  placeholderTextColor={'#888888'}
                   placeholder="1.000.000"
                   keyboardType="number-pad"
                   maxLength={9}
@@ -1055,6 +1072,7 @@ export default class EditProductComponent extends React.Component {
                     width: '89%',
                     borderRadius: 5,
                     marginRight: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.price}
                   onChangeText={text => {
@@ -1197,7 +1215,7 @@ export default class EditProductComponent extends React.Component {
                 товару.
               </Text>
             )}
-         
+
             <Text
               style={{
                 fontSize: 16,
@@ -1216,9 +1234,7 @@ export default class EditProductComponent extends React.Component {
 
             <TouchableOpacity
               onPress={() => {
-             
-                  this.sendProduct();
-             
+                this.sendProduct();
               }}
               style={{
                 alignSelf: 'center',

@@ -467,6 +467,7 @@ export default class EditZakazchikDesignerComponent extends React.Component {
                 editable={false}
                 style={[
                   styles.nazvania,
+                  
                   this.state.surname_error
                     ? {borderColor: 'red'}
                     : {borderColor: '#F5F5F5'},
@@ -721,6 +722,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '100%',
     borderRadius: 5,
+    color:'#5B5B5B'
   },
   nazvaniaText: {
     fontFamily: 'Poppins_500Medium',

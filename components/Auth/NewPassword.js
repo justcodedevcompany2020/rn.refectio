@@ -205,6 +205,7 @@ export default class NewPasswordComponent extends Component {
               secureTextEntry={this.state.password}
               style={[
                 {
+                  color:'#5B5B5B',
                   borderWidth: 1,
                   borderColor: '#F5F5F5',
                   padding: 10,

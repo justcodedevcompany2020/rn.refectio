@@ -46,6 +46,12 @@ export default class CustomerMyAccauntComponent extends React.Component {
       editUserDataModal: false,
 
       authUserState: [],
+      show_room_arr: [
+        {name: 'Да', id: 1},
+        {name: 'Нет', id: 2},
+      ],
+      show_room: '',
+      show_room_error: false,
 
       id: null,
       inn: '',
@@ -92,7 +98,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
         {name: 'Да', id: 1},
         {name: 'Нет', id: 2},
       ],
-
+      show_roomAll: '',
       collaborate: '',
       dmodel: '',
       openDesignerPopup: false,
@@ -105,7 +111,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
   static contextType = AuthContext;
 
   getCityApi = async () => {
-    console.log('aa');
+    // console.log('aa');
     this.setState({
       gorodModal: true,
     });
@@ -121,7 +127,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
-        console.log(res, 'l');
+        // console.log(res, 'l');
         if (res.status === true) {
           this.setState({sOpenCityDropDown3: !this.state.sOpenCityDropDown3});
         }
@@ -186,6 +192,39 @@ export default class CustomerMyAccauntComponent extends React.Component {
       .catch(error => console.log('error', error));
 
     // ete succesy true ya kanchumenq getAuthUserProfile es funkcian u pagumenq popapy
+  };
+
+  updateShowRoom = async showRoom => {
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem('userToken');
+    let AuthStr = 'Bearer ' + userToken;
+
+    myHeaders.append('Authorization', AuthStr);
+    let formdata = new FormData();
+    formdata.append('show_room', showRoom);
+    console.log(showRoom, 'da');
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
+    };
+    fetch(
+      `https://admin.refectio.ru/public/api/update_show_room`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(result => {
+        // console.log(result, 'all');
+        if (result.status === true) {
+          this.getAuthUserProfile();
+          // this.setState({
+          //   gorodModal: false,
+          //   gorodFilter: false,
+          // });
+        }
+      })
+      .catch(error => console.log('error', error));
   };
 
   getAllCategory = async () => {
@@ -295,6 +334,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
     })
       .then(response => response.json())
       .then(res => {
+        // console.log(res, 'result');
         this.setState({
           about_us: res?.data[0].about_us,
           updatedAboutUs: res?.data[0].about_us,
@@ -319,9 +359,10 @@ export default class CustomerMyAccauntComponent extends React.Component {
           teleg:
             res?.data[0].telegram !== null
               ? 't.me/' + res?.data[0].telegram
-              : 't.me/',
+              : '',
           collaborate: res?.data[0].job_with_designer,
           dmodel: res?.data[0].dmodel,
+          show_roomAll: res?.data[0].show_room,
         });
       });
   };
@@ -586,35 +627,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
 
     this.setState({gorodArray: filterSort});
   };
-  // enterCheckBox = (items, index) => {
-  //   let filterSort = this.state.gorodArray;
-  //   let find = true;
-
-  //   items.city_id = items.id;
-  //   items.city_name = items.name;
-
-  //   if (items.city_id == 9999) {
-  //     filterSort = this.state.cityItems
-  //       .filter(el => el.id !== 9999)
-  //       .map((item, i) => ({city_name: item.name, city_id: item.id}));
-  //     this.setState({
-  //       allCities: true,
-  //       countCity: this.state.cityItems.length - 1,
-  //     });
-  //   } else {
-  //     filterSort.find(item => {
-  //       if (item.id == items.city_id) {
-  //         find = false;
-  //       }
-  //     });
-  //     if (find) {
-  //       filterSort.push({city_name: items.name, city_id: items.city_id});
-  //       this.setState({countCity: this.state.countCity + 1});
-  //     }
-  //   }
-
-  //   this.setState({gorodArray: filterSort});
-  // };
 
   verifyCheckBox = items => {
     let filterSort = this.state.gorodArray;
@@ -726,8 +738,10 @@ export default class CustomerMyAccauntComponent extends React.Component {
     let AuthStr = 'Bearer ' + userToken;
     myHeaders.append('Authorization', AuthStr);
 
-    let saite = this.state.site.replace('https://', '');
-
+    let saite = this.state.site
+      .replace(/^https?:\/\//, '')
+      .replace(/^https?:\/\//, '');
+    console.log(saite, 'all');
     if (saite === '') {
       saite = null;
     }
@@ -759,8 +773,13 @@ export default class CustomerMyAccauntComponent extends React.Component {
     let AuthStr = 'Bearer ' + userToken;
     myHeaders.append('Authorization', AuthStr);
 
-    let telegram = this.state.teleg.replace('t.me/', '');
-
+    // let telegram = this.state.teleg.replace('t.me/', '');
+    // let telegram = this.state.teleg.replace(/(t\.me\/|https:\/\/t\.me\/)/g, '');
+    let telegram = this.state.teleg.replace(
+      /(t\.me\/|https:\/\/t\.me\/|@)/g,
+      '',
+    );
+    console.log(telegram, 'al');
     let formdata = new FormData();
     formdata.append('telegram', telegram);
 
@@ -777,18 +796,13 @@ export default class CustomerMyAccauntComponent extends React.Component {
     )
       .then(response => response.json())
       .then(result => {
+        console.log(result, 'res');
         this.getAuthUserProfile();
       })
       .catch(error => console.log('error', error));
   };
 
   pickImage = async () => {
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [4, 4],
-    //   quality: 1,
-    // });
     const result = await ImagePicker.openPicker({
       mediaType: 'photo',
       cropping: true, // Enable cropping
@@ -866,11 +880,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
     let AuthStr = 'Bearer ' + userToken;
     myHeaders.append('Authorization', AuthStr);
 
-    // await this.setState({
-    //   userToken: userToken,
-    //   role_id:
-    // })
-
     let requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -936,7 +945,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
     fetch(`https://admin.refectio.ru/public/api/update_dmodel`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log(result);
+        // console.log(result);
       })
       .catch(error => console.log('error', error));
   };
@@ -963,7 +972,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
     )
       .then(response => response.json())
       .then(result => {
-        console.log(result);
+        // console.log(result);
       })
       .catch(error => console.log('error', error));
   };
@@ -1037,6 +1046,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                           paddingVertical: 10,
                           backgroundColor: '#F5F5F5',
                           fontFamily: 'Poppins_500Medium',
+                          color: '#5B5B5B',
                         }}>
                         Все города России
                       </Text>
@@ -1081,6 +1091,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                                 paddingVertical: 10,
                                 backgroundColor: '#F5F5F5',
                                 borderRadius: 8,
+                                color: '#5B5B5B',
                                 fontFamily: 'Poppins_500Medium',
                               }}>
                               {item.city_name}
@@ -1202,6 +1213,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                                 textAlign: 'left',
                                 paddingVertical: 10,
                                 fontFamily: 'Poppins_500Medium',
+                                color: '#5B5B5B',
                               }}>
                               {item.name}
                             </Text>
@@ -1367,6 +1379,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                                   fontFamily: 'Poppins_500Medium',
                                   borderBottomWidth: 1,
                                   borderBottomColor: '#F5F5F5',
+                                  color: '#5B5B5B',
                                 },
                               ]}>
                               {item.nicename}
@@ -1387,7 +1400,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
               </View>
             </ImageBackground>
           </Modal>
-
+          {/* saaaa */}
           <Modal visible={this.state.editUserDataModal}>
             <ImageBackground
               style={[
@@ -1419,7 +1432,13 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     top: 18,
                     zIndex: 1,
                   }}
-                  onPress={() => this.setState({editUserDataModal: false})}>
+                  onPress={() => {
+                    this.editTeleg();
+                    this.editSite();
+                    this.editNameCompany();
+                    this.getAuthUserProfile();
+                    this.setState({editUserDataModal: false});
+                  }}>
                   <Image
                     source={require('../../assets/image/ixs.png')}
                     style={{
@@ -1497,7 +1516,9 @@ export default class CustomerMyAccauntComponent extends React.Component {
                         <TextInput
                           underlineColorAndroid="transparent"
                           placeholder={this.state.companyName}
+                          placeholderTextColor={'#888888'}
                           style={{
+                            color: '#5B5B5B',
                             borderWidth: 1,
                             borderColor: '#F5F5F5',
                             padding: 10,
@@ -1540,33 +1561,30 @@ export default class CustomerMyAccauntComponent extends React.Component {
                       <View style={{position: 'relative'}}>
                         <TextInput
                           underlineColorAndroid="transparent"
-                          placeholder={'https://www.google.com'}
+                          placeholder={'https://mymebelsite.com'}
+                          placeholderTextColor={'#888888'}
                           style={{
                             borderWidth: 1,
                             borderColor: '#F5F5F5',
+                            color: '#5B5B5B',
                             padding: 10,
                             width: '100%',
                             borderRadius: 5,
                           }}
                           value={this.state.site}
                           onChangeText={text => {
-                            if (
-                              text == 'https://' ||
-                              text == 'https:/' ||
-                              text == 'https:' ||
-                              text == 'https' ||
-                              text == 'http' ||
-                              text == 'htt' ||
-                              text == 'ht' ||
-                              text == 'h'
-                            ) {
-                              text = 'https://';
-                              this.setState({site: text});
-                            } else {
-                              let new_text = text.replace('https://', '');
+                            let newValue = text;
 
-                              this.setState({site: `https://${new_text}`});
+                            if (newValue === 'https://') {
+                              newValue = '';
+                            } else if (
+                              !newValue.startsWith('https://') &&
+                              newValue !== ''
+                            ) {
+                              newValue = `https://${newValue}`;
                             }
+
+                            this.setState({site: newValue});
                           }}
                         />
                         <TouchableOpacity
@@ -1601,28 +1619,31 @@ export default class CustomerMyAccauntComponent extends React.Component {
                           underlineColorAndroid="transparent"
                           style={{
                             borderWidth: 1,
+                            color: '#5B5B5B',
                             borderColor: '#F5F5F5',
                             padding: 10,
                             width: '100%',
                             borderRadius: 5,
                           }}
+                          placeholderTextColor={'#888888'}
                           onChangeText={text => {
-                            if (
-                              text == 't.me/' ||
-                              text == 't.me' ||
-                              text == 't.m' ||
-                              text == 't.' ||
-                              text == 't'
-                            ) {
-                              text = 't.me/';
-                              this.setState({teleg: text});
-                            } else {
-                              let new_text = text.replace('t.me/', '');
-
-                              this.setState({teleg: `t.me/${new_text}`});
+                            let newValue = text.trim();
+                            newValue = newValue.replace(
+                              /(t\.me\/|https:\/\/t\.me\/|@)/g,
+                              '',
+                            );
+                            newValue = newValue.replace(/^t\.me\//, '');
+                            if (text.length == 0) {
+                              newValue = text;
+                            } else if (text && !newValue.startsWith('t.me/')) {
+                              newValue = `t.me/${newValue}`;
                             }
+
+                            // Update the state
+                            this.setState({teleg: newValue});
                           }}
                           value={this.state.teleg}
+                          placeholder="t.me/myTelegramChannel"
                         />
 
                         <TouchableOpacity
@@ -1681,6 +1702,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                             width: '100%',
                             borderRadius: 5,
                             fontFamily: 'Poppins_500Medium',
+                            color: '#5B5B5B',
                           }}>
                           {this.state.collaborate}
                         </Text>
@@ -1764,6 +1786,127 @@ export default class CustomerMyAccauntComponent extends React.Component {
                         </ScrollView>
                       </View>
                     </View>
+                    <View
+                      style={{
+                        position: 'relative',
+                        // marginTop: 9,
+                      }}>
+                      <Text
+                        style={[
+                          {
+                            fontFamily: 'Poppins_500Medium',
+                            lineHeight: 23,
+                            fontSize: 15,
+                            color: '#5B5B5B',
+                            marginTop: 27,
+                            marginBottom: 5,
+                          },
+                        ]}>
+                        Наличие шоурума
+                      </Text>
+                      <TouchableOpacity
+                        style={[
+                          {
+                            borderWidth: 1,
+                            padding: 10,
+                            width: '100%',
+                            borderColor: '#000',
+                            borderRadius: 5,
+                            position: 'relative',
+                            borderColor: '#F5F5F5',
+                          },
+                        ]}
+                        onPress={() =>
+                          this.setState({
+                            sOpenCityDropDown1: !this.state.sOpenCityDropDown1,
+                          })
+                        }>
+                        <Text
+                          style={{
+                            padding: 5,
+                            width: '100%',
+                            borderRadius: 5,
+                            fontFamily: 'Poppins_500Medium',
+                            color: '#5B5B5B',
+                          }}>
+                          {this.state.show_roomAll}
+                        </Text>
+                        <View
+                          style={{position: 'absolute', right: 17, bottom: 18}}>
+                          {!this.state.sOpenCityDropDown1 && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <Path
+                                d="M1 1L9 9L17 1"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                          {this.state.sOpenCityDropDown1 && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <Path
+                                d="M1 9L9 1L17 9"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={
+                          this.state.sOpenCityDropDown1
+                            ? styles.daNetActive
+                            : styles.daNet
+                        }>
+                        <ScrollView nestedScrollEnabled={true}>
+                          {this.state.show_room_arr.map((item, index) => {
+                            return (
+                              <TouchableOpacity
+                                key={index}
+                                style={{
+                                  width: '100%',
+                                  justifyContent: 'center',
+                                  textAlign: 'left',
+                                  borderBottomWidth: 1,
+                                  borderBottomColor: '#F5F5F5',
+                                }}
+                                onPress={() => {
+                                  this.setState({
+                                    show_roomAll: item.name,
+                                    sOpenCityDropDown1: false,
+                                  });
+                                  this.updateShowRoom(item.name);
+                                }}>
+                                <Text
+                                  style={{
+                                    textAlign: 'left',
+                                    paddingVertical: 10,
+                                    fontFamily: 'Poppins_500Medium',
+                                    color: '#888888',
+                                  }}>
+                                  {item.name}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </ScrollView>
+                      </View>
+                    </View>
 
                     <View
                       style={{
@@ -1807,6 +1950,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                             width: '100%',
                             borderRadius: 5,
                             fontFamily: 'Poppins_500Medium',
+                            color: '#5B5B5B',
                           }}>
                           {this.state.dmodel}
                         </Text>
@@ -1869,7 +2013,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                                   borderBottomColor: '#F5F5F5',
                                 }}
                                 onPress={() => {
-                                  console.log('onpress');
+                                  // console.log('onpress');
                                   this.setState({
                                     dmodel: item.name,
                                     dmodelPopup: false,
@@ -1897,55 +2041,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
             </ImageBackground>
           </Modal>
 
-          {/* <Modal visible={this.state.aboutUsModal}>
-            <ImageBackground
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              source={require("../../assets/image/blurBg.png")}
-            >
-              <View
-                style={{
-                  width: "90%",
-                  height: "40%",
-                  backgroundColor: "#fff",
-                  borderRadius: 20,
-                  position: "relative",
-                  paddingHorizontal: 15,
-                }}
-              >
-                <Text
-                  style={{
-                    marginVertical: 20,
-                    fontSize: 26,
-                    textAlign: "center",
-                    color: "#2D9EFB",
-                    fontFamily: "Poppins_500Medium",
-                  }}
-                >
-                  Дополнительная информация
-                </Text>
-
-                <RichTextEditorComponent />
-
-                <TouchableOpacity
-                  style={{
-                    alignSelf: "center",
-                    position: "absolute",
-                    bottom: "10%",
-                  }}
-                  onPress={() => {
-                    this.setState({ aboutUsModal: false })
-                  }}
-                >
-                  <BlueButton name="Ок" />
-                </TouchableOpacity>
-              </View>
-            </ImageBackground>
-          </Modal> */}
-
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('CustomerMainPage')}
             style={{
@@ -1963,6 +2058,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 fontFamily: 'Poppins_600SemiBold',
                 textAlign: 'center',
                 marginTop: 18.29,
+                color: 'black',
               }}>
               Мой профиль
             </Text>
@@ -1994,6 +2090,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                         style={{
                           fontSize: 18,
                           fontFamily: 'Poppins_500Medium',
+                          color: '#5B5B5B',
                         }}>
                         {item.company_name}
                       </Text>
@@ -2092,12 +2189,15 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 underlineColorAndroid="transparent"
                 placeholder={this.state.strana}
                 editable={false}
+                placeholderTextColor={'#888888'}
                 style={{
+                  color: '#5B5B5B',
                   borderWidth: 1,
                   borderColor: '#F5F5F5',
                   padding: 10,
                   width: '100%',
                   borderRadius: 5,
+                  color: '#5B5B5B',
                 }}
               />
             </View>
@@ -2137,7 +2237,9 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 underlineColorAndroid="transparent"
                 placeholder={this.state.phone}
                 editable={false}
+                placeholderTextColor={'#888888'}
                 style={{
+                  color: '#5B5B5B',
                   borderWidth: 1,
                   borderColor: '#F5F5F5',
                   padding: 10,
@@ -2183,8 +2285,10 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 underlineColorAndroid="transparent"
                 placeholder="**********"
                 secureTextEntry={true}
+                placeholderTextColor={'#888888'}
                 editable={false}
                 style={{
+                  color: '#5B5B5B',
                   borderWidth: 1,
                   borderColor: '#F5F5F5',
                   padding: 10,
@@ -2364,7 +2468,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                   <HTML
                     contentWidth={700}
                     source={{
-                      html: `<div style="font-size: 16px">${
+                      html: `<div style="font-size: 16px; color:#5B5B5B">${
                         this.state.about_us ? this.state.about_us : ''
                       }</div>`,
                     }}

@@ -742,7 +742,12 @@ export default class FilterComponent extends React.Component {
                             sOpenCityDropDown: false,
                           })
                         }>
-                        <Text style={{textAlign: 'left', paddingVertical: 10}}>
+                        <Text
+                          style={{
+                            textAlign: 'left',
+                            paddingVertical: 10,
+                            color: '#5B5B5B',
+                          }}>
                           {item.city_name}
                         </Text>
                       </TouchableOpacity>

@@ -456,6 +456,7 @@ export default class EditPhoneNumberConfirmComponent extends React.Component {
 
 const styles = StyleSheet.create({
   textInput: {
+    color:'#5B5B5B',
     width: 50,
     height: 60,
     borderRadius: 8,

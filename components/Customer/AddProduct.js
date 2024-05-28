@@ -16,6 +16,7 @@ import BlueButton from '../Component/Buttons/BlueButton';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
 import Svg, {Path, Rect} from 'react-native-svg';
 // import * as ImagePicker from "expo-image-picker";
+import ImagePicker from 'react-native-image-crop-picker';
 import {launchImageLibrary} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -29,6 +30,7 @@ export default class AddProductComponent extends React.Component {
     super(props);
     this.state = {
       all_images: [],
+      nextIndex: 1,
       buttonSend: true,
       keyboardOpen: false,
       buttonBlue: false,
@@ -37,7 +39,6 @@ export default class AddProductComponent extends React.Component {
       categoryChanged_error: '',
       categoryId: '',
       img: null,
-
       name: '',
       name_error: false,
 
@@ -186,15 +187,11 @@ export default class AddProductComponent extends React.Component {
   sendProduct = async () => {
     this.setState({buttonBlue: false});
     let {all_images} = this.state;
-    console.log('all_images', all_images.length);
+
     if (all_images.length === 0) {
       this.setState({all_images_error: true});
     }
-    if (
-      this.state.all_images.length > 0
-      // this.state.name !== ""
-      // this.state.categoryChanged !== ""
-    ) {
+    if (this.state.all_images.length > 0) {
       await all_images.map((element, index) => {
         this.formdata.append('photo[]', element);
       });
@@ -215,10 +212,7 @@ export default class AddProductComponent extends React.Component {
     myHeaders.append('Authorization', AuthStr);
     myHeaders.append('Content-Type', 'multipart/form-data');
 
-    console.log(this.state.name, 'name, update');
-
     if (this.props.category.parent) {
-      console.log('if');
       this.formdata.append('parent_category_id', this.props.category.parent.id);
       this.formdata.append(
         'parent_category_name',
@@ -228,7 +222,6 @@ export default class AddProductComponent extends React.Component {
       this.formdata.append('category_id', this.props.category.id);
       this.formdata.append('category_name', this.props.category.name);
     } else {
-      // console.log(123123);
       this.formdata.append('parent_category_id', this.props.category.id);
       this.formdata.append('parent_category_name', this.props.category.name);
     }
@@ -258,7 +251,6 @@ export default class AddProductComponent extends React.Component {
     )
       .then(response => response.json())
       .then(async result => {
-        console.log(result);
         this.setState({isLoading: false, buttonBlue: false});
         if (result.status === true) {
           (await this.setState({
@@ -436,14 +428,11 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 97 ||
         this.props.category.id == 98,
     });
-
-    console.log(this.props.category.id, this.props.category.id == 28);
   }
 
   componentWillUnmount() {
     if (this.focusListener) {
       this.focusListener();
-      console.log(' END');
     }
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
@@ -483,11 +472,6 @@ export default class AddProductComponent extends React.Component {
   };
 
   render() {
-    console.log(
-      this.state.buttonBlue === true ? 'a' : 'b',
-      this.state.buttonBlue,
-      'length',
-    );
     const longText = this.props.category.name;
     const truncatedText = this.truncateText(longText, 9);
     return (
@@ -628,6 +612,7 @@ export default class AddProductComponent extends React.Component {
               <TextInput
                 underlineColorAndroid="transparent"
                 multiline={false}
+                placeholderTextColor={'#888888'}
                 placeholder="Кухня ЛРАЙ145 МДФ ПВХ Сатин Бежевый/СИСТЕМА"
                 numberOfLines={1}
                 keyboardType="default"
@@ -639,6 +624,7 @@ export default class AddProductComponent extends React.Component {
                     width: '100%',
                     borderRadius: 5,
                     fontSize: 13.5,
+                    color: '#5B5B5B',
                   },
                   this.state.name_error
                     ? {borderColor: 'red'}
@@ -646,7 +632,6 @@ export default class AddProductComponent extends React.Component {
                 ]}
                 value={this.state.name}
                 onChangeText={text => {
-                  console.log(text, 'lll');
                   this.setState({name: text, name_error: false});
                 }}
                 maxLength={42}
@@ -670,6 +655,7 @@ export default class AddProductComponent extends React.Component {
                 <TextInput
                   underlineColorAndroid="transparent"
                   placeholder="Эмаль"
+                  placeholderTextColor={'#888888'}
                   keyboardType="default"
                   style={{
                     borderWidth: 1,
@@ -677,6 +663,7 @@ export default class AddProductComponent extends React.Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.material}
                   onChangeText={text => this.setState({material: text})}
@@ -702,10 +689,12 @@ export default class AddProductComponent extends React.Component {
                   underlineColorAndroid="transparent"
                   placeholder="Эмаль"
                   keyboardType="default"
+                  placeholderTextColor={'#888888'}
                   style={{
                     borderWidth: 1,
                     borderColor: '#F5F5F5',
                     padding: 10,
+                    color: '#5B5B5B',
                     width: '100%',
                     borderRadius: 5,
                   }}
@@ -734,12 +723,14 @@ export default class AddProductComponent extends React.Component {
                   underlineColorAndroid="transparent"
                   placeholder="ДСП"
                   keyboardType="default"
+                  placeholderTextColor={'#888888'}
                   style={{
                     borderWidth: 1,
                     borderColor: '#F5F5F5',
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   }}
                   value={this.state.frame}
                   onChangeText={text => this.setState({frame: text})}
@@ -767,6 +758,7 @@ export default class AddProductComponent extends React.Component {
                   keyboardType="default"
                   style={{
                     borderWidth: 1,
+                    color: '#5B5B5B',
                     borderColor: '#F5F5F5',
                     padding: 10,
                     width: '100%',
@@ -796,9 +788,11 @@ export default class AddProductComponent extends React.Component {
                   underlineColorAndroid="transparent"
                   placeholder="Камень"
                   keyboardType="default"
+                  placeholderTextColor={'#888888'}
                   style={{
                     borderWidth: 1,
                     borderColor: '#F5F5F5',
+                    color: '#5B5B5B',
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
@@ -827,8 +821,10 @@ export default class AddProductComponent extends React.Component {
                   underlineColorAndroid="transparent"
                   placeholder="0.5 метров"
                   keyboardType="decimal-pad"
+                  placeholderTextColor={'#888888'}
                   style={{
                     borderWidth: 1,
+                    color: '#5B5B5B',
                     borderColor: '#F5F5F5',
                     padding: 10,
                     width: '100%',
@@ -858,9 +854,11 @@ export default class AddProductComponent extends React.Component {
                   underlineColorAndroid="transparent"
                   placeholder="8 метров"
                   keyboardType="numeric"
+                  placeholderTextColor={'#888888'}
                   style={{
                     borderWidth: 1,
                     borderColor: '#F5F5F5',
+                    color: '#5B5B5B',
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
@@ -888,13 +886,16 @@ export default class AddProductComponent extends React.Component {
                 <TextInput
                   underlineColorAndroid="transparent"
                   placeholder="1.000.000"
+                  placeholderTextColor={'#888888'}
                   keyboardType="number-pad"
                   style={{
                     borderWidth: 1,
                     borderColor: '#F5F5F5',
+                    color: '#5B5B5B',
                     padding: 10,
                     width: '89%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                     marginRight: 5,
                   }}
                   value={this.state.price}
@@ -958,7 +959,6 @@ export default class AddProductComponent extends React.Component {
                 horizontal={true}
                 style={{marginTop: 30}}
                 showsHorizontalScrollIndicator={false}>
-               
                 {this.state.all_images.map((item, index) => (
                   <ImageWithLoadingIndicator
                     key={index}
@@ -976,11 +976,9 @@ export default class AddProductComponent extends React.Component {
               </Text>
             )}
 
-         
             <TouchableOpacity
               onPress={() => {
                 if (this.state.buttonSend === true) {
-                  console.log('al');
                   this.sendProduct();
                 }
               }}

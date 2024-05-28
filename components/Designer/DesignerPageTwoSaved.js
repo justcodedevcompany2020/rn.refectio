@@ -34,7 +34,7 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
       RewardModal: false,
       loading: false,
       bronyModal: false,
-
+      meshok: '',
       changed: '',
       sOpenCityDropDown: false,
       parent_name: '',
@@ -223,6 +223,7 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
           whatsapp: res.data.user[0].watsap_phone,
           city_count: res.data.city_count,
           about_us: res.data.user[0].about_us,
+          meshok: res.data.user[0].meshok,
         });
       });
   };
@@ -1402,6 +1403,7 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
                     this.props.navigation.navigate('AboutUsScreen', {
                       value: this.state.about_us,
                       hideText: true,
+                      meshok: this.state.meshok,
                     });
                   }}>
                   <Image
@@ -1563,7 +1565,11 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
                               onPress={() =>
                                 this.props.navigation.navigate(
                                   'AboutUsScreen',
-                                  {value: item.about, hideText: true},
+                                  {
+                                    value: item.about,
+                                    hideText: true,
+                                    meshok: 'no',
+                                  },
                                 )
                               }>
                               <Image
@@ -1654,6 +1660,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     fontFamily: 'Raleway_500Medium',
+    color: '#969696',
   },
   sOpenCityDropDown: {
     height: 0,

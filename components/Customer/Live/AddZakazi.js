@@ -416,6 +416,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '100%',
     borderRadius: 5,
+    color:'#5B5B5B',
   },
   nazvaniaText: {
     fontFamily: 'Poppins_500Medium',

@@ -16,7 +16,7 @@ export default function LoadingAdd() {
     const timeoutId = setTimeout(() => {
       clearInterval(progressInterval);
       setProgress(1);
-    }, 60000);
+    }, 180000); // 3 minutes in milliseconds
 
     return () => {
       clearInterval(progressInterval);
@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.6)',
-
     zIndex: 99999999,
     justifyContent: 'center',
     alignItems: 'center',

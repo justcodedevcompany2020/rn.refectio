@@ -34,7 +34,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       RewardModal: false,
       loading: false,
       bronyModal: false,
-
+      update: true,
       changed: '',
       sOpenCityDropDown: false,
       parent_name: '',
@@ -99,6 +99,7 @@ export default class DesignerPageTwoComponent extends React.Component {
 
       aboutProductPopup: false,
       aboutProduct: '',
+      meshok: '',
     };
   }
 
@@ -221,6 +222,7 @@ export default class DesignerPageTwoComponent extends React.Component {
           whatsapp: res.data.user[0].watsap_phone,
           city_count: res.data.city_count,
           about_us: res.data.user[0].about_us,
+          meshok: res.data.user[0].meshok,
         });
       });
   };
@@ -471,6 +473,7 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   handleBackButtonClick() {
     const {id, setId, setUrlLinking} = this.props;
+    this.setState({update: true});
     if (this.props.route.params?.prevRoute == 'DesignerSaved') {
       this.props.navigation.navigate('DesignerSaved');
     } else {
@@ -522,14 +525,16 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      if (this.props.route.params?.fromSearch) {
-        loadedDataAfterLoadPageOne();
-        this.setState({change_category_loaded: true});
-      }
+      console.log(
+        this.props.route.params?.prevRoute == 'DesignerPage',
+        urlMy == 'yes',
+        'utlll',
+      );
       if (
         this.props.route.params?.prevRoute == 'DesignerPage' &&
-        urlMy == 'yes'
+        this.state.update
       ) {
+        // console.log('yeeeeeebaaaat');
         loadedDataAfterLoadPageOne();
         this.setState({change_category_loaded: true});
       }
@@ -1433,10 +1438,11 @@ export default class DesignerPageTwoComponent extends React.Component {
                     },
                   ]}
                   onPress={() => {
-                    // this.setState({ aboutUsPopup: true });
+                    this.setState({update: false});
                     this.props.navigation.navigate('AboutUsScreen', {
                       value: this.state.about_us,
                       hideText: true,
+                      meshok: this.state.meshok,
                     });
                   }}>
                   <Image
@@ -1595,12 +1601,17 @@ export default class DesignerPageTwoComponent extends React.Component {
                                 right: 0,
                                 top: 5,
                               }}
-                              onPress={() =>
+                              onPress={() => {
+                                this.setState({update: false});
                                 this.props.navigation.navigate(
                                   'AboutUsScreen',
-                                  {value: item.about, hideText: true},
-                                )
-                              }>
+                                  {
+                                    value: item.about,
+                                    hideText: true,
+                                    meshok: 'no',
+                                  },
+                                );
+                              }}>
                               <Image
                                 source={require('../../assets/image/Screenshot_2.png')}
                                 style={{width: 27, height: 27}}
@@ -1689,6 +1700,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     fontFamily: 'Raleway_500Medium',
+    color: '#969696',
   },
   sOpenCityDropDown: {
     height: 0,
@@ -1769,6 +1781,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   procentInput: {
+    color: '#5B5B5B',
     borderWidth: 1,
     borderColor: '#F5F5F5',
     borderRadius: 6,

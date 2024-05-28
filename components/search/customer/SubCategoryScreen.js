@@ -7,9 +7,10 @@ import {
   View,
 } from 'react-native';
 import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
-import {BackBtn} from './CategoryScreen';
+import {BackBtn} from '../customer/CategorySingleScreen';
+// import {renderSwitch} from '../customer/SubCategoryScreen';
 
-export default function SubCategoryScreen({navigation, category}) {
+export default function SubCategoryScreenCustomer({navigation, category}) {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View
@@ -29,7 +30,7 @@ export default function SubCategoryScreen({navigation, category}) {
               color: 'black',
               fontWeight: '500',
             }}>
-            {category.name}
+            {category?.name}
           </Text>
           <TouchableOpacity
             style={{
@@ -40,18 +41,18 @@ export default function SubCategoryScreen({navigation, category}) {
             onPress={() => {
               const routes = navigation.getState()?.routes;
               const prevRoute = routes[routes.length - 2];
-              return navigation.navigate('CategoryScreen', {
+              navigation.navigate('CategoryScreen', {
                 category: category,
                 prevRoute: prevRoute,
                 parentCategoryType: category,
               });
             }}>
             <Text style={{color: 'black', fontSize: 20, marginBottom: 10}}>
-              {renderSwitch(category.id)}
+              {renderSwitch(category?.id)}
             </Text>
           </TouchableOpacity>
-          {category.childrens.length ? (
-            category.childrens.map((el, i) => (
+          {category?.childrens.length ? (
+            category?.childrens.map((el, i) => (
               <TouchableOpacity
                 style={{
                   borderBottomWidth: 1,

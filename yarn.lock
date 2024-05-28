@@ -6040,10 +6040,10 @@
   "resolved" "https://registry.npmjs.org/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.12.tgz"
   "version" "2.1.12"
 
-"react-native-image-picker@^7.0.3":
-  "integrity" "sha512-mFbu8AzZ8tysO7xHsQ+TmxYYJYaBCL66s4AujjgCBEAyTufm2nhjhVOw2uq1zvMDVtGoyekzCJfH3JqVmXK/3w=="
-  "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.0.3.tgz"
-  "version" "7.0.3"
+"react-native-image-picker@^7.1.2":
+  "integrity" "sha512-b5y5nP60RIPxlAXlptn2QwlIuZWCUDWa/YPUVjgHc0Ih60mRiOg1PSzf0IjHSLeOZShCpirpvSPGnDExIpTRUg=="
+  "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.1.2.tgz"
+  "version" "7.1.2"
 
 "react-native-image-slider-banner@^1.0.3":
   "integrity" "sha512-yo5klEz82eNSSj1luYEk54vpVinUnUE08LsHBnp01KQVt9LrVuuFusN9m+nnkZv4vlR2zeBRRFK3mQAse0PHPg=="

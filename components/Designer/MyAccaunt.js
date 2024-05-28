@@ -247,6 +247,7 @@ export default class MyAccauntComponent extends React.Component {
               fontSize: 17,
               fontFamily: 'Poppins_600SemiBold',
               marginTop: 18,
+              color: 'black',
             }}>
             Мой профиль
           </Text>
@@ -282,7 +283,8 @@ export default class MyAccauntComponent extends React.Component {
                 </TouchableOpacity>
 
                 <View style={{marginTop: 70, marginLeft: 25}}>
-                  <Text style={{fontFamily: 'Poppins_500Medium'}}>
+                  <Text
+                    style={{fontFamily: 'Poppins_500Medium', color: '#5B5B5B'}}>
                     Изменение имени
                   </Text>
                   <TextInput
@@ -294,14 +296,17 @@ export default class MyAccauntComponent extends React.Component {
                       borderColor: '#F5F5F5',
                       borderRadius: 6,
                       padding: 10,
+                      color: '#5B5B5B',
                     }}
                     placeholder={this.state.changeName}
                     value={this.state.changeName}
+                    placeholderTextColor={'#888888'}
                     onChangeText={value => this.setState({changeName: value})}
                   />
                 </View>
                 <View style={{marginTop: 12, marginLeft: 25}}>
-                  <Text style={{fontFamily: 'Poppins_500Medium'}}>
+                  <Text
+                    style={{fontFamily: 'Poppins_500Medium', color: '#5B5B5B'}}>
                     Изменение фамилии
                   </Text>
                   <TextInput
@@ -312,9 +317,11 @@ export default class MyAccauntComponent extends React.Component {
                       borderWidth: 1,
                       borderColor: '#F5F5F5',
                       borderRadius: 6,
+                      color: '#5B5B5B',
                       padding: 10,
                     }}
                     placeholder={this.state.changeSurname}
+                    placeholderTextColor={'#888888'}
                     value={this.state.changeSurname}
                     onChangeText={value =>
                       this.setState({changeSurname: value})
@@ -352,6 +359,7 @@ export default class MyAccauntComponent extends React.Component {
                   fontSize: 20,
                   width: '85%',
                   fontFamily: 'Poppins_600SemiBold',
+                  color: '#5B5B5B',
                 }}>
                 {this.state.changeName} {this.state.changeSurname}
               </Text>
@@ -369,7 +377,8 @@ export default class MyAccauntComponent extends React.Component {
 
             <View style={{marginTop: 27}}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={{fontFamily: 'Poppins_500Medium'}}>
+                <Text
+                  style={{fontFamily: 'Poppins_500Medium', color: '#5B5B5B'}}>
                   Номер телефона
                 </Text>
                 <TouchableOpacity
@@ -390,6 +399,7 @@ export default class MyAccauntComponent extends React.Component {
                 style={{
                   marginTop: 7,
                   width: '100%',
+                  color: '#5B5B5B',
                   height: 50,
                   borderWidth: 1,
                   borderColor: '#F5F5F5',
@@ -397,6 +407,7 @@ export default class MyAccauntComponent extends React.Component {
                   padding: 10,
                 }}
                 keyboardType="phone-pad"
+                placeholderTextColor={'#888888'}
                 placeholder={this.state.phone}
                 editable={false}
               />
@@ -404,7 +415,10 @@ export default class MyAccauntComponent extends React.Component {
 
             <View style={{marginTop: 12}}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={{fontFamily: 'Poppins_500Medium'}}>Пароль</Text>
+                <Text
+                  style={{fontFamily: 'Poppins_500Medium', color: '#5B5B5B'}}>
+                  Пароль
+                </Text>
                 <TouchableOpacity
                   onPress={() =>
                     this.props.navigation.navigate('EditPasswordDesigner')
@@ -423,6 +437,7 @@ export default class MyAccauntComponent extends React.Component {
               <TextInput
                 style={{
                   marginTop: 7,
+                  color: '#5B5B5B',
                   width: '100%',
                   height: 50,
                   borderWidth: 1,
@@ -433,6 +448,7 @@ export default class MyAccauntComponent extends React.Component {
                 secureTextEntry={true}
                 placeholder="*************"
                 editable={false}
+                placeholderTextColor={'#888888'}
               />
             </View>
 
@@ -488,6 +504,7 @@ export default class MyAccauntComponent extends React.Component {
                       fontFamily: 'Poppins_500Medium',
                       textAlign: 'center',
                       marginVertical: 20,
+                      color: '#5B5B5B',
                     }}>
                     Вы уверены, что хотите удалить свой акаунт?{'\n'} Все данные
                     будут утеряны.

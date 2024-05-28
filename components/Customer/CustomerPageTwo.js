@@ -27,6 +27,7 @@ export default class DesignerPageTwoComponent extends React.Component {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
+      meshok: '',
       company_name_url: '',
       loading: false,
       fontsLoaded: false,
@@ -42,7 +43,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       city_for_sales_user: [],
       products: [],
       user_id_for_search: '',
-
+      update: true,
       procentArray: [
         {
           to: '0',
@@ -86,6 +87,7 @@ export default class DesignerPageTwoComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
+        // console.log(res.data.user, 'all');
         let arr = res.data.user_category_for_product;
         const isFound = res.data.user_category_for_product.findIndex(
           element => +element.parent_category_id == 10,
@@ -118,6 +120,7 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.setState({
           company_name_url: res.data.user[0].company_name_url,
           user: res.data.user,
+          meshok: res.data.user[0].meshok,
           user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
           whatsapp: res.data.user[0].watsap_phone,
@@ -150,7 +153,7 @@ export default class DesignerPageTwoComponent extends React.Component {
   };
 
   handleBackButtonClick() {
-    // this.props.navigation.navigate("CustomerMainPage", { screen: true });
+    this.setState({update: false});
     const {id, setId, setUrlLinking} = this.props;
 
     if (this.props.route.params?.fromSearch === true) {
@@ -192,14 +195,16 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      if (this.props.route.params?.fromSearch) {
-        loadedDataAfterLoadPageOne();
-        this.setState({change_category_loaded: true});
-      }
+      console.log(
+        this.props.route.params?.prevRoute == 'DesignerPage',
+        urlMy == 'yes',
+        'utlll',
+      );
       if (
         this.props.route.params?.prevRoute == 'DesignerPage' &&
-        urlMy == 'yes'
+        this.state.update
       ) {
+        // console.log('yeeeeeebaaaat');
         loadedDataAfterLoadPageOne();
         this.setState({change_category_loaded: true});
       }
@@ -214,6 +219,7 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
   handleShare = async () => {
+    console.log(this.state.company_name_url, 'url');
     const shareingStartWith = 'refectio.ru/';
     try {
       {
@@ -1014,10 +1020,11 @@ export default class DesignerPageTwoComponent extends React.Component {
                     },
                   ]}
                   onPress={() => {
-                    // this.setState({ aboutUsPopup: true })
+                    this.setState({update: false});
                     this.props.navigation.navigate('AboutUsScreen', {
                       value: this.state.about_us,
                       hideText: true,
+                      meshok: this.state.meshok,
                     });
                   }}>
                   <Image
@@ -1182,15 +1189,17 @@ export default class DesignerPageTwoComponent extends React.Component {
                                 right: 0,
                                 top: 5,
                               }}
-                              onPress={() =>
+                              onPress={() => {
+                                this.setState({update: false});
                                 this.props.navigation.navigate(
                                   'AboutUsScreen',
                                   {
                                     value: item.about,
                                     hideText: true,
+                                    meshok: 'no',
                                   },
-                                )
-                              }>
+                                );
+                              }}>
                               <Image
                                 source={require('../../assets/image/Screenshot_2.png')}
                                 style={{width: 27, height: 27}}
@@ -1289,6 +1298,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     fontFamily: 'Raleway_500Medium',
+    color: '#969696',
   },
   sOpenCityDropDown: {
     width: '60%',

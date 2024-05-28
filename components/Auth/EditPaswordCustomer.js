@@ -247,6 +247,7 @@ export default class EditPasswordCustomerCompnent extends React.Component {
                   borderWidth: 1,
                   padding: 10,
                   width: '100%',
+                  color:'#5B5B5B',
                   borderRadius: 5,
                 },
                 this.state.old_password_error
@@ -312,6 +313,7 @@ export default class EditPasswordCustomerCompnent extends React.Component {
               secureTextEntry={this.state.password_bool}
               style={[
                 {
+                  color:'#5B5B5B',
                   borderWidth: 1,
                   borderColor: '#F5F5F5',
                   padding: 10,
@@ -376,6 +378,7 @@ export default class EditPasswordCustomerCompnent extends React.Component {
               secureTextEntry={this.state.password_confirmation_bool}
               style={[
                 {
+                  color:'#5B5B5B',
                   borderWidth: 1,
                   padding: 10,
                   width: '100%',

@@ -458,6 +458,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     borderColor: '#F5F5F5',
     borderWidth: 2,
+    color:'#5B5B5B'
   },
   confirmView: {
     marginHorizontal: 26,

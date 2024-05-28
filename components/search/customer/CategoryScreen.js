@@ -25,12 +25,41 @@ const {width} = Dimensions.get('screen');
 
 export default function CategoryScreenCustomer(props) {
   const {category, parentCategoryType, navigation, prevRoute, route} = props;
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
   const [nextUrl, setNextUrl] = useState(
     'https://admin.refectio.ru/public/api/photo_filter',
   );
+  const [rubli, setRubli] = useState([
+    {
+      icon: require('../../../assets/image/price1.png'),
+      checked: false,
+      size: 32,
+      id: 1,
+    },
+    {
+      icon: require('../../../assets/image/price2.png'),
+      checked: false,
+      size: 41,
+      id: 2,
+    },
+    {
+      icon: require('../../../assets/image/price3.png'),
+      checked: false,
+      size: 52,
+      id: 3,
+    },
+    {
+      icon: require('../../../assets/image/price4.png'),
+      checked: false,
+      size: 64,
+      id: 4,
+    },
+  ]);
+
+  const [meshokInChecked, setMeshokInChecked] = useState([]);
   const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [filterMode, setFilterMode] = useState(false);
@@ -39,7 +68,8 @@ export default function CategoryScreenCustomer(props) {
   const [cityId, setCityId] = useState(null);
   const [startPrice, setStartPrice] = useState(null);
   const [endPrice, setEndPrice] = useState(null);
-
+  const [price, setPrice] = useState(false);
+  const [priceList, setPriceList] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -70,11 +100,21 @@ export default function CategoryScreenCustomer(props) {
       formdata.append('parent_category_id', category.id);
     }
 
+    let meshok_new = [];
+
+    meshokInChecked.forEach((item, index) => {
+      if (item.checked) {
+        meshok_new.push(item.id);
+      }
+    });
+
     !clear &&
       (cityId && formdata.append('city_id', cityId.id),
       startPrice &&
         formdata.append('start_price', startPrice.replaceAll('.', '')),
-      endPrice && formdata.append('end_price', endPrice.replaceAll('.', '')));
+      endPrice && formdata.append('end_price', endPrice.replaceAll('.', ''))),
+      meshokInChecked && formdata.append('meshok', meshok_new.join(','));
+
     await fetch(refresh ? firstPageUrl : nextUrl, {
       method: 'POST',
       headers: {
@@ -94,9 +134,7 @@ export default function CategoryScreenCustomer(props) {
           newArr = newArr.filter(product => !existingIds.has(product.id));
           updatedProducts = products.concat(newArr);
         }
-
         setProducts(updatedProducts);
-
         setNextUrl(res.data.next_page_url);
         setIsRefreshing(false);
         setLoading(false);
@@ -149,13 +187,31 @@ export default function CategoryScreenCustomer(props) {
       });
   };
 
+  const setmeshokInChecked = async checkedIndex => {
+    setRubli(prevRubli => {
+      const updatedRubli = prevRubli.map((item, index) => {
+        if (index === checkedIndex) {
+          return {
+            ...item,
+            checked: !item.checked,
+          };
+        }
+        return item;
+      });
+      setMeshokInChecked(updatedRubli);
+      return updatedRubli;
+    });
+  };
+
   const onClear = () => {
     setCityId(null);
     setStartPrice(null);
     setEndPrice(null);
     setFilterMode(false);
     setIsRefreshing(true);
+    setMeshokInChecked(null);
     getProducts('refresh', 'clear');
+    setRubli(prevRubli => prevRubli.map(item => ({...item, checked: false})));
   };
 
   return (
@@ -169,7 +225,7 @@ export default function CategoryScreenCustomer(props) {
           onPressBack={() => {
             const routes = navigation.getState()?.routes;
             const prevRoute =
-              routes[routes.length - 2].name === 'CustomerPageTwo'
+              routes[routes.length - 2].name === 'GhostPageTwo'
                 ? 'SubCategoryScreen'
                 : routes[routes.length - 2].name;
             return filterMode
@@ -261,6 +317,7 @@ export default function CategoryScreenCustomer(props) {
                             textAlign: 'left',
                             paddingVertical: 10,
                             fontFamily: 'Poppins_500Medium',
+                            color: '#5B5B5B',
                           }}>
                           {item.name}
                         </Text>
@@ -271,99 +328,158 @@ export default function CategoryScreenCustomer(props) {
               </View>
             </View>
 
-            <View style={{marginBottom: 30}}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins_500Medium',
-                  lineHeight: 23,
-                  fontSize: 16,
-                  color: '#5B5B5B',
-                  marginBottom: 20,
-                }}>
-                Цена
-              </Text>
-              <Text
-                style={{
-                  fontFamily: 'Poppins_500Medium',
-                  lineHeight: 23,
-                  fontSize: 14,
-                  color: '#5B5B5B',
-                  marginBottom: 5,
-                }}>
-                От
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="1.000.000"
-                  keyboardType="number-pad"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: '#F5F5F5',
-                    padding: 10,
-                    width: '89%',
-                    borderRadius: 5,
-                    marginRight: 5,
+            <View style={{marginBottom: 20}}>
+              <Text style={styles.priceparams}>Параметры стоимости</Text>
+              <View style={styles.priceList}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setPrice(false);
+                    setPriceList(true);
                   }}
-                  value={startPrice}
-                  maxLength={9}
-                  onChangeText={text => {
-                    let without_dots = text.split('.').join('');
-                    let with_dots = without_dots
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                    setStartPrice(with_dots);
+                  style={[
+                    styles.priceButton,
+                    priceList ? '' : {backgroundColor: 'white'},
+                  ]}>
+                  <Text style={styles.priceText}>Ценовая категория</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setPrice(true);
+                    setPriceList(false);
                   }}
-                />
-                <Image
-                  source={require('../../../assets/image/apranqiGin.png')}
-                  style={{width: 30, height: 50}}
-                />
+                  style={[
+                    styles.priceButton,
+                    price ? '' : {backgroundColor: 'white'},
+                  ]}>
+                  <Text style={styles.priceText}>Цена</Text>
+                </TouchableOpacity>
               </View>
+              {price ? (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins_500Medium',
+                      lineHeight: 23,
+                      fontSize: 14,
+                      color: '#5B5B5B',
+                      marginBottom: 5,
+                    }}>
+                    От
+                  </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <TextInput
+                      underlineColorAndroid="transparent"
+                      placeholder="1.000.000"
+                      keyboardType="number-pad"
+                      placeholderTextColor={'#888888'}
+                      style={{
+                        color: '#5B5B5B',
+                        borderWidth: 1,
+                        borderColor: '#F5F5F5',
+                        padding: 10,
+                        width: '89%',
+                        borderRadius: 5,
+                        marginRight: 5,
+                      }}
+                      value={startPrice}
+                      maxLength={9}
+                      onChangeText={text => {
+                        let without_dots = text.split('.').join('');
+                        let with_dots = without_dots
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        setStartPrice(with_dots);
+                      }}
+                    />
+                    <Image
+                      source={require('../../../assets/image/apranqiGin.png')}
+                      style={{width: 30, height: 50}}
+                    />
+                  </View>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins_500Medium',
+                      lineHeight: 23,
+                      fontSize: 14,
+                      color: '#5B5B5B',
+                      marginTop: 15,
+                      marginBottom: 5,
+                    }}>
+                    До
+                  </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <TextInput
+                      underlineColorAndroid="transparent"
+                      placeholder="1.000.000"
+                      keyboardType="number-pad"
+                      placeholderTextColor={'#888888'}
+                      style={{
+                        color: '#5B5B5B',
+                        borderWidth: 1,
+                        borderColor: '#F5F5F5',
+                        padding: 10,
+                        width: '89%',
+                        borderRadius: 5,
+                        marginRight: 5,
+                      }}
+                      value={endPrice}
+                      maxLength={9}
+                      onChangeText={text => {
+                        let without_dots = text.split('.').join('');
+                        let with_dots = without_dots
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        setEndPrice(with_dots);
+                      }}
+                    />
+                    <Image
+                      source={require('../../../assets/image/apranqiGin.png')}
+                      style={{width: 30, height: 50}}
+                    />
+                  </View>
 
-              <Text
-                style={{
-                  fontFamily: 'Poppins_500Medium',
-                  lineHeight: 23,
-                  fontSize: 14,
-                  color: '#5B5B5B',
-                  marginTop: 15,
-                  marginBottom: 5,
-                }}>
-                До
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="1.000.000"
-                  keyboardType="number-pad"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: '#F5F5F5',
-                    padding: 10,
-                    width: '89%',
-                    borderRadius: 5,
-                    marginRight: 5,
-                  }}
-                  value={endPrice}
-                  maxLength={9}
-                  onChangeText={text => {
-                    let without_dots = text.split('.').join('');
-                    let with_dots = without_dots
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                    setEndPrice(with_dots);
-                  }}
-                />
-                <Image
-                  source={require('../../../assets/image/apranqiGin.png')}
-                  style={{width: 30, height: 50}}
-                />
-              </View>
+                  <View style={{paddingHorizontal: 10}}>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins_500Medium',
+                        lineHeight: 23,
+                        fontSize: 13,
+                        color: '#5B5B5B',
+                        marginTop: 10,
+                      }}>
+                      * Не будут отображаться изделия, у которых не указана
+                      цена.{' '}
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <View style={styles.priceSelection}>
+                  {/* */}
+                  {rubli.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={async () => {
+                          await setmeshokInChecked(index);
+                        }}
+                        key={index}
+                        style={[
+                          styles.selectionTouch,
+                          item.checked ? {backgroundColor: '#B5E3F7'} : '',
+                        ]}>
+                        <Image
+                          style={{width: 42, height: 42}}
+                          source={item.icon}
+                        />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              )}
             </View>
 
             <View
               style={{
+                marginTop: price ? 20 : 35,
                 alignItems: 'center',
               }}>
               <TouchableOpacity
@@ -397,10 +513,11 @@ export default function CategoryScreenCustomer(props) {
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 15,
-                  marginBottom: 50,
+                  // marginBottom: 20,
                 }}
                 onPress={() => {
                   setCityId(null);
+                  setMeshokInChecked([]);
                   onClear();
                 }}>
                 <Text
@@ -420,8 +537,6 @@ export default function CategoryScreenCustomer(props) {
             keyExtractor={(item, index) => item.id}
             data={products}
             maxToRenderPerBatch={60}
-            // initialNumToRender={1}
-            // snapToInterval={9}
             renderToHardwareTextureAndroid={true}
             numColumns={3}
             renderItem={({item, index}) => {
@@ -588,10 +703,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 5,
   },
+  selectionTouch: {
+    width: '23%',
+    height: 30,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  priceSelection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
   sOpenCityDropDown: {
     width: '100%',
     height: 0,
-    zIndex: 100,
+    // zIndex: 100,
+  },
+  priceList: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    width: '100%',
+    height: 50,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
   },
   sOpenCityDropDownActive: {
     width: '100%',
@@ -600,7 +741,31 @@ const styles = StyleSheet.create({
     borderColor: '#F5F5F5',
     paddingVertical: 5,
     paddingHorizontal: 10,
-    zIndex: 100,
     backgroundColor: '#fff',
+  },
+  priceButton: {
+    width: '50%',
+    height: '100%',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    backgroundColor: '#B5E3F7',
+    borderRadius: 5,
+    justifyContent: 'center',
+  },
+  priceText: {
+    fontFamily: 'Poppins_500Medium',
+    lineHeight: 23,
+    // fontSize: 16,
+    color: '#5B5B5B',
+    marginLeft: 10,
+    // marginBottom: 20,
+  },
+  priceparams: {
+    fontFamily: 'Poppins_500Medium',
+    lineHeight: 23,
+    fontSize: 15,
+    color: '#5B5B5B',
+    // color: 'black',
+    marginBottom: 5,
   },
 });

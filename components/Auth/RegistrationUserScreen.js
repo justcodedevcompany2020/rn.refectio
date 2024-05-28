@@ -16,7 +16,6 @@ import BlueButton from '../Component/Buttons/BlueButton';
 import MaskInput from 'react-native-mask-input';
 // import * as ImagePicker from "expo-image-picker";
 
-
 export default class RegistrationUserScreenComponent extends Component {
   constructor(props) {
     super(props);
@@ -75,52 +74,7 @@ export default class RegistrationUserScreenComponent extends Component {
 
   form_data = new FormData();
 
-  // pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsEditing: true,
-  //     quality: 1,
-  //   });
-  //   if (!result.canceled) {
-  //     this.setState({
-  //       diplom_photo: result.assets[0].uri,
-  //       diplom_photo_error: false,
-  //     });
-  //   } else {
-  //     this.setState({ diplom_photo_error: true });
-  //   }
-
-  //   this.form_data.append("diplom_photo", {
-  //     uri: result.assets[0].uri,
-  //     type: "image/jpg",
-  //     name: "photo.jpg",
-  //   });
-  // };
-
-  // pickImage2 = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsEditing: true,
-  //     quality: 1,
-  //   });
-
-  //   if (!result.canceled) {
-  //     this.setState({
-  //       selfi_photo: result.assets[0].uri,
-  //       selfi_photo_error: false,
-  //     });
-  //   } else {
-  //     this.setState({ selfi_photo_error: true });
-  //   }
-
-  //   this.form_data.append("selfi_photo", {
-  //     uri: result.assets[0].uri,
-  //     type: "image/jpg",
-  //     name: "photo.jpg",
-  //   });
-  // };
-
-  DizainerRegisterApi = async () => {
+    DizainerRegisterApi = async () => {
     const {
       name,
       surname,
@@ -386,6 +340,7 @@ export default class RegistrationUserScreenComponent extends Component {
               </Text>
               <TextInput
                 underlineColorAndroid="transparent"
+                placeholderTextColor={'#888888'}
                 style={[
                   {
                     borderWidth: 1,
@@ -393,6 +348,7 @@ export default class RegistrationUserScreenComponent extends Component {
                     width: '85%',
                     borderRadius: 5,
                     marginLeft: 25,
+                    color: '#5B5B5B',
                   },
                   this.state.name_error
                     ? {borderColor: 'red'}
@@ -423,6 +379,7 @@ export default class RegistrationUserScreenComponent extends Component {
               </Text>
               <TextInput
                 underlineColorAndroid="transparent"
+                placeholderTextColor={'#888888'}
                 style={[
                   {
                     borderWidth: 1,
@@ -430,6 +387,7 @@ export default class RegistrationUserScreenComponent extends Component {
                     width: '85%',
                     borderRadius: 5,
                     marginLeft: 25,
+                    color: '#5B5B5B',
                   },
                   this.state.surname_error
                     ? {borderColor: 'red'}
@@ -465,8 +423,10 @@ export default class RegistrationUserScreenComponent extends Component {
                 underlineColorAndroid="transparent"
                 keyboardType="phone-pad"
                 placeholder="+7 (975) 991-99-99"
+                placeholderTextColor={'#888888'}
                 style={[
                   {
+                    color: '#5B5B5B',
                     borderWidth: 1,
                     padding: 10,
                     width: '85%',
@@ -530,6 +490,7 @@ export default class RegistrationUserScreenComponent extends Component {
                 underlineColorAndroid="transparent"
                 secureTextEntry={true}
                 password={true}
+                placeholderTextColor={'#888888'}
                 autoCorrect={false}
                 style={[
                   {
@@ -538,6 +499,7 @@ export default class RegistrationUserScreenComponent extends Component {
                     width: '85%',
                     borderRadius: 5,
                     marginLeft: 25,
+                    color: '#5B5B5B',
                   },
                   this.state.password_error
                     ? {borderColor: 'red'}
@@ -571,6 +533,7 @@ export default class RegistrationUserScreenComponent extends Component {
                 secureTextEntry={true}
                 password={true}
                 autoCorrect={false}
+                placeholderTextColor={'#888888'}
                 style={[
                   {
                     borderWidth: 1,
@@ -579,6 +542,7 @@ export default class RegistrationUserScreenComponent extends Component {
                     width: '85%',
                     borderRadius: 5,
                     marginLeft: 25,
+                    color: '#5B5B5B',
                   },
                   this.state.password_confirmation_error
                     ? {borderColor: 'red'}

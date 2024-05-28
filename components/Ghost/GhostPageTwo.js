@@ -1,9 +1,11 @@
+import GhostNavComponent from './GhostNav';
 import React from 'react';
 import {
   ActivityIndicator,
   Dimensions,
   Image,
   ImageBackground,
+  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -16,19 +18,16 @@ import {
 } from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Linking} from 'react-native';
-import WebView from 'react-native-webview';
-import BlueButton from '../Component/Buttons/BlueButton';
+import BlueButton from '../../components/Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
-import GhostNavComponent from './GhostNav';
 
 const {width: screenWidth} = Dimensions.get('window');
-
-export default class GhostPageTwoComponent extends React.Component {
+export default class DesignerPageTwoComponent extends React.Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
+      meshok: '',
       company_name_url: '',
       loading: false,
       fontsLoaded: false,
@@ -88,6 +87,7 @@ export default class GhostPageTwoComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
+        // console.log(res.data.user, 'all');
         let arr = res.data.user_category_for_product;
         const isFound = res.data.user_category_for_product.findIndex(
           element => +element.parent_category_id == 10,
@@ -120,6 +120,7 @@ export default class GhostPageTwoComponent extends React.Component {
         this.setState({
           company_name_url: res.data.user[0].company_name_url,
           user: res.data.user,
+          meshok: res.data.user[0].meshok,
           user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
           whatsapp: res.data.user[0].watsap_phone,
@@ -130,6 +131,8 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   handleClearData = () => {
+    const {setUrlMy} = this.props;
+    setUrlMy('');
     this.setState({
       user: [],
       user_category_for_product: [],
@@ -194,16 +197,15 @@ export default class GhostPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      if (this.props.route.params?.fromSearch) {
-        loadedDataAfterLoadPageOne();
-        this.setState({change_category_loaded: true});
-      }
+      // console.log(this.props.route.params?.prevRoute === 'DesignerPage');
       if (
         this.props.route.params?.prevRoute == 'DesignerPage' &&
         urlMy == 'yes'
       ) {
+        console.log('yeeeeeebaaaat');
         loadedDataAfterLoadPageOne();
         this.setState({change_category_loaded: true});
+      } else {
       }
     });
   }
@@ -216,7 +218,6 @@ export default class GhostPageTwoComponent extends React.Component {
   }
 
   handleShare = async () => {
-    console.log(this.state.company_name_url, 'url');
     const shareingStartWith = 'refectio.ru/';
     try {
       {
@@ -284,10 +285,6 @@ export default class GhostPageTwoComponent extends React.Component {
         }
 
         this.setState({
-          // user: data.user,
-          // user_bonus_for_designer: res.data.user_bonus_for_designer,
-          // user_category_for_product: res.data.user_category_for_product,
-          // city_for_sales_user: res.data.city_for_sales_user,
           products: data.products,
           // show_plus_button: false,
           extract: data.user[0].extract,
@@ -743,7 +740,7 @@ export default class GhostPageTwoComponent extends React.Component {
                           {this.state.user[0].extract !== null && (
                             <TouchableOpacity
                               onPress={() => {
-                                this.setState({VipiskaModal: true});
+                                this.props.navigation.navigate('Modal');
                               }}>
                               <Image
                                 source={require('../../assets/image/sidebar.png')}
@@ -1016,10 +1013,11 @@ export default class GhostPageTwoComponent extends React.Component {
                     },
                   ]}
                   onPress={() => {
-                    // this.setState({ aboutUsPopup: true })
+                    // this.setState({update: false});
                     this.props.navigation.navigate('AboutUsScreen', {
                       value: this.state.about_us,
                       hideText: true,
+                      meshok: this.state.meshok,
                     });
                   }}>
                   <Image
@@ -1178,15 +1176,18 @@ export default class GhostPageTwoComponent extends React.Component {
                                 right: 0,
                                 top: 5,
                               }}
-                              onPress={() =>
+                              onPress={() => {
+                                const {setUrlMy} = this.props;
+                                setUrlMy('');
                                 this.props.navigation.navigate(
                                   'AboutUsScreen',
                                   {
                                     value: item.about,
                                     hideText: true,
+                                    meshok: 'no',
                                   },
-                                )
-                              }>
+                                );
+                              }}>
                               <Image
                                 source={require('../../assets/image/Screenshot_2.png')}
                                 style={{width: 27, height: 27}}
@@ -1285,6 +1286,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     fontFamily: 'Raleway_500Medium',
+    color: '#969696',
   },
   sOpenCityDropDown: {
     width: '60%',

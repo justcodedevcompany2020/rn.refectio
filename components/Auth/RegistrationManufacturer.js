@@ -14,8 +14,6 @@ import Svg, {Path, Rect} from 'react-native-svg';
 import ArrowGrayComponent from '../../assets/image/ArrowGray';
 import BlueButton from '../Component/Buttons/BlueButton';
 import ImagePicker from 'react-native-image-crop-picker';
-// import * as ImagePicker from "expo-image-picker";
-// import {launchImageLibrary} from 'react-native-image-picker';
 
 export default class RegistrationManufacturerComponent extends Component {
   constructor(props) {
@@ -70,7 +68,7 @@ export default class RegistrationManufacturerComponent extends Component {
 
       saite: '',
 
-      telegram: 't.me/',
+      telegram: '',
       // tg: 't.me/',
 
       show_room_arr: [
@@ -85,9 +83,6 @@ export default class RegistrationManufacturerComponent extends Component {
 
       percent_bonus: [],
       percent_bonus_error: false,
-
-      // product_category: [],
-      // product_category_error: false,
 
       item_id: null,
 
@@ -405,28 +400,25 @@ export default class RegistrationManufacturerComponent extends Component {
       show_room,
       collaborate,
       d3model,
-      // percent_bonus,
       sales_city,
       // product_category,
       dopInfo,
     } = this.state;
 
     console.log(dopInfo);
-
-    // let new_product_category = [];
-    // for (let i = 0; i < product_category.length; i++) {
-    //   let category = product_category[i].id + "^" + product_category[i].name;
-    //   new_product_category.push(category);
-    // }
-
     let new_sales_city = [];
     for (let i = 0; i < sales_city.length; i++) {
       let city = sales_city[i].id + '^' + sales_city[i].name;
       new_sales_city.push(city);
     }
 
-    let telegram = this.state.telegram.replace('t.me/', '');
-    let saite = this.state.saite.replace('https://', '');
+    let telegram = this.state.telegram.replace(
+      /(t\.me\/|https:\/\/t\.me\/|@)/g,
+      '',
+    );
+    let saite = this.state.saite
+      .replace(/^https?:\/\//, '')
+      .replace(/^https?:\/\//, '');
 
     if (saite === '') {
       saite = null;
@@ -446,8 +438,6 @@ export default class RegistrationManufacturerComponent extends Component {
     this.form_data.append('job_with_designer', collaborate);
     this.form_data.append('dmodel', d3model);
     this.form_data.append('sales_city', new_sales_city);
-    // this.form_data.append("product_category[]", new_product_category);
-    // this.form_data.append("percent_bonus[]", this.state.procentArrayToString);
     this.form_data.append('about_us', dopInfo);
 
     let requestOptions = {
@@ -834,12 +824,14 @@ export default class RegistrationManufacturerComponent extends Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   },
                   this.state.company_name_error
                     ? {borderColor: 'red'}
                     : {borderColor: '#F5F5F5'},
                 ]}
                 value={this.state.company_name}
+                placeholderTextColor={'#888888'}
                 onChangeText={value => {
                   this.setState({
                     company_name: value,
@@ -885,12 +877,15 @@ export default class RegistrationManufacturerComponent extends Component {
                 underlineColorAndroid="transparent"
                 keyboardType="phone-pad"
                 maxLength={12}
+                placeholderTextColor={'#888888'}
                 style={[
                   {
                     borderWidth: 1,
+
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   },
                   this.state.individual_number_error
                     ? {borderColor: 'red'}
@@ -936,8 +931,10 @@ export default class RegistrationManufacturerComponent extends Component {
                 underlineColorAndroid="transparent"
                 keyboardType="phone-pad"
                 placeholder="+7 (975) 991-99-99"
+                placeholderTextColor={'#888888'}
                 style={[
                   {
+                    color: '#5B5B5B',
                     borderWidth: 1,
                     padding: 10,
                     width: '100%',
@@ -1000,6 +997,7 @@ export default class RegistrationManufacturerComponent extends Component {
                 keyboardType="phone-pad"
                 style={[
                   {
+                    color: '#5B5B5B',
                     borderWidth: 1,
                     padding: 10,
                     width: '100%',
@@ -1155,6 +1153,7 @@ export default class RegistrationManufacturerComponent extends Component {
                               fontFamily: 'Poppins_500Medium',
                               borderBottomWidth: 1,
                               borderBottomColor: '#F5F5F5',
+                              color: '#5B5B5B',
                             },
                           ]}>
                           {item.nicename}
@@ -1382,6 +1381,7 @@ export default class RegistrationManufacturerComponent extends Component {
                         paddingVertical: 10,
                         backgroundColor: '#F5F5F5',
                         fontFamily: 'Poppins_500Medium',
+                        color: '#5B5B5B',
                       }}>
                       Все города России
                     </Text>
@@ -1564,6 +1564,7 @@ export default class RegistrationManufacturerComponent extends Component {
                             textAlign: 'left',
                             paddingVertical: 10,
                             fontFamily: 'Poppins_500Medium',
+                            color: '#5B5B5B',
                           }}>
                           {item.name}
                         </Text>
@@ -1590,33 +1591,30 @@ export default class RegistrationManufacturerComponent extends Component {
 
               <TextInput
                 underlineColorAndroid="transparent"
-                placeholder="https://mymebelsite.com"
+                placeholder={'https://mymebelsite.com'}
                 autoCapitalize="none"
+                placeholderTextColor={'#888888'}
                 style={{
                   borderWidth: 1,
                   borderColor: '#F5F5F5',
                   padding: 10,
                   width: '100%',
                   borderRadius: 5,
+                  color: '#5B5B5B',
                 }}
                 value={this.state.saite}
                 onChangeText={text => {
-                  if (
-                    text == 'https://' ||
-                    text == 'https:/' ||
-                    text == 'https:' ||
-                    text == 'https' ||
-                    text == 'http' ||
-                    text == 'htt' ||
-                    text == 'ht' ||
-                    text == 'h'
-                  ) {
-                    text = 'https://';
-                    this.setState({saite: text});
+                  let newValue = text;
+                  if (newValue === 'https://') {
+                    newValue = '';
+                  } else if (!newValue.startsWith('https://')) {
+                    this.setState({
+                      saite: newValue.startsWith('https://')
+                        ? newValue
+                        : `https://${newValue}`,
+                    });
                   } else {
-                    let new_text = text.replace('https://', '');
-
-                    this.setState({saite: `https://${new_text}`});
+                    this.setState({saite: newValue});
                   }
                 }}
               />
@@ -1635,31 +1633,37 @@ export default class RegistrationManufacturerComponent extends Component {
               </Text>
 
               <TextInput
-                placeholder="MyTelegramChennel"
+                placeholder={'t.me/myTelegramChannel'}
                 underlineColorAndroid="transparent"
+                placeholderTextColor={'#888888'}
                 style={{
                   borderWidth: 1,
                   borderColor: '#F5F5F5',
                   padding: 10,
                   width: '100%',
                   borderRadius: 5,
+                  color: '#5B5B5B',
                 }}
                 value={this.state.telegram}
                 onChangeText={text => {
-                  if (
-                    text == 't.me/' ||
-                    text == 't.me' ||
-                    text == 't.m' ||
-                    text == 't.' ||
-                    text == 't'
-                  ) {
-                    text = 't.me/';
-                    this.setState({telegram: text});
-                  } else {
-                    let new_text = text.replace('t.me/', '');
+                  let newValue = text.trim(); // Trim any leading/trailing whitespace
+                  console.log(newValue.length);
+                  // Remove "https://t.me/" if it exists
+                  newValue = newValue.replace(
+                    /(t\.me\/|https:\/\/t\.me\/|@)/g,
+                    '',
+                  );
 
-                    this.setState({telegram: `t.me/${new_text}`});
+                  // Remove "t.me/" if it exists
+                  newValue = newValue.replace(/^t\.me\//, '');
+                  if (text.length == 0) {
+                    newValue = text;
+                  } else if (text && !newValue.startsWith('t.me/')) {
+                    newValue = `t.me/${newValue}`;
                   }
+
+                  // Update the state
+                  this.setState({telegram: newValue});
                 }}
               />
             </View>
@@ -1684,6 +1688,7 @@ export default class RegistrationManufacturerComponent extends Component {
                 underlineColorAndroid="transparent"
                 secureTextEntry={true}
                 password={true}
+                placeholderTextColor={'#888888'}
                 autoCorrect={false}
                 style={[
                   {
@@ -1691,6 +1696,7 @@ export default class RegistrationManufacturerComponent extends Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   },
                   this.state.password_error
                     ? {borderColor: 'red'}
@@ -1724,6 +1730,7 @@ export default class RegistrationManufacturerComponent extends Component {
                 secureTextEntry={true}
                 password={true}
                 autoCorrect={false}
+                placeholderTextColor={'#888888'}
                 style={[
                   {
                     borderWidth: 1,
@@ -1731,6 +1738,7 @@ export default class RegistrationManufacturerComponent extends Component {
                     padding: 10,
                     width: '100%',
                     borderRadius: 5,
+                    color: '#5B5B5B',
                   },
                   this.state.password_confirmation_error
                     ? {borderColor: 'red'}
@@ -1794,6 +1802,7 @@ export default class RegistrationManufacturerComponent extends Component {
                     width: '100%',
                     borderRadius: 5,
                     fontFamily: 'Poppins_500Medium',
+                    color: '#5B5B5B',
                   }}>
                   {this.state.show_room}
                 </Text>
@@ -1871,7 +1880,6 @@ export default class RegistrationManufacturerComponent extends Component {
                 </ScrollView>
               </View>
             </View>
-            {/* dropDown  end*/}
 
             <View
               style={{
@@ -1914,6 +1922,7 @@ export default class RegistrationManufacturerComponent extends Component {
                     width: '100%',
                     borderRadius: 5,
                     fontFamily: 'Poppins_500Medium',
+                    color: '#5B5B5B',
                   }}>
                   {this.state.collaborate}
                 </Text>
@@ -2033,6 +2042,7 @@ export default class RegistrationManufacturerComponent extends Component {
                     width: '100%',
                     borderRadius: 5,
                     fontFamily: 'Poppins_500Medium',
+                    color: '#5B5B5B',
                   }}>
                   {this.state.d3model}
                 </Text>
